@@ -1,5 +1,5 @@
 app.controller("HomeController", function ($scope, $rootScope, $window, DataServices) {
-    $rootScope.title = 'Tokyolife | Trang Chủ';
+    $rootScope.title = 'TechLife | Trang Chủ';
     $scope.loading = true;
     $window.scrollTo(0, 0);
 

@@ -1,55 +1,121 @@
 <main class="body" ng-app="registrationApp" ng-controller="RegisterController">
-    <div class="mt-5 form-width-custom">
-        <h3 class="text-center mb-3 fw-medium">Đăng Ký</h3>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <!-- ĐIỀU CHỈNH ĐỘ RỘNG FORM TẠI ĐÂY -->
+            <div class="col-12 col-md-10 col-lg-6 col-xl-6">
 
-        <form id="form-register" ng-submit="register()">
+                <h3 class="text-center mb-4 fw-medium">Đăng Ký</h3>
 
-            <div class="form-group mb-3">
-                <label for="name" class="form-label">Họ Và Tên</label>
-                <input type="text" name="name" id="name" class="form-control" ng-model="name">
-            </div>
-            <div class="form-group mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" name="email" id="email" class="form-control" ng-model="email">
-            </div>
+                <form id="form-register" ng-submit="register()">
 
-            <div class="form-group mb-3 position-relative">
-                <label for="password" class="form-label">Mật Khẩu</label>
-                <input type="{{showPassword ? 'text' : 'password'}}" name="password" id="password" class="form-control"
-                    ng-model="password">
-                <i class="fa-solid fa-eye position-absolute top-0 end-0 mt-5 me-3"
-                    ng-click="togglePasswordVisibility()"></i>
-            </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">Họ Và Tên</label>
+                        <input type="text" class="form-control" ng-model="name">
+                    </div>
 
-            <div class="form-group mb-3 position-relative">
-                <label for="password-confirm" class="form-label">Nhập Lại Mật Khẩu</label>
-                <input type="{{showPassword ? 'text' : 'password'}}" name="confirmPassword" id="password-confirm"
-                    class="form-control" ng-model="confirmPassword">
-                <i class="fa-solid fa-eye position-absolute top-0 end-0 mt-5 me-3"
-                    ng-click="togglePasswordVisibility()"></i>
-            </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" ng-model="email" placeholder="abc@gmail.com">
+                    </div>
 
+                    <div class="form-group mb-3">
+                        <label class="form-label">Số Điện Thoại</label>
+                        <input type="tel" class="form-control" ng-model="phone" placeholder="VD: 0987654321">
+                    </div>
 
-            <div class="form-group mb-3">
-                <button type="submit" class="btn btn-danger container-fluid">Đăng Ký</button>
-            </div>
+                    <!-- ĐỊA CHỈ -->
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-4 mb-3">
+                            <label class="form-label">Tỉnh / Thành phố</label>
+                            <select class="form-control"
+                                    ng-model="selectedProvince"
+                                    ng-options="p.Name for p in locations">
+                                <option value="">Chọn tỉnh/thành phố</option>
+                            </select>
+                        </div>
 
-            <p class="fs-6 mb-2 d-flex align-items-center gap-2">Bạn đã có tài khoản ? <a class="nav-link text-danger"
-                    href="#!login">Đăng Nhập Ngay</a></p>
-            <a href="#!password/forgot" class="nav-link text-danger">Quên Mật Khẩu</a>
-        </form>
+                        <div class="col-12 col-md-4 mb-3">
+                            <label class="form-label">Quận / Huyện</label>
+                            <select class="form-control"
+                                    ng-model="selectedDistrict"
+                                    ng-options="d.Name for d in selectedProvince.Districts"
+                                    ng-disabled="!selectedProvince">
+                                <option value="">Chọn quận/huyện</option>
+                            </select>
+                        </div>
 
-        <p class="text-center fs-6 fw-bold my-3">Hoặc</p>
+                        <div class="col-12 col-md-4 mb-3">
+                            <label class="form-label">Phường / Xã</label>
+                            <select class="form-control"
+                                    ng-model="selectedWard"
+                                    ng-options="w.Name for w in selectedDistrict.Wards"
+                                    ng-disabled="!selectedDistrict">
+                                <option value="">Chọn phường/xã</option>
+                            </select>
+                        </div>
 
-        <div class="login-social d-flex flex-column gap-3">
-            <div class="login-fb d-flex align-items-center justify-content-center gap-2 py-2 rounded-3">
-                <img src="./src/assets/img/icon/icon-fb.svg" class="img-fluid icon-size-custom">
-                <span class="text-white fw-medium">Đăng Nhập Với Facebook</span>
-            </div>
+                        <div class="col-12">
+                            <input type="text"
+                                   class="form-control"
+                                   ng-model="addressDetail"
+                                   placeholder="Số nhà, tên đường...">
+                        </div>
+                    </div>
 
-            <div class="login-gg d-flex align-items-center justify-content-center gap-2 py-2 rounded-3">
-                <img src="./src/assets/img/icon/icon-gg.svg" class="img-fluid icon-size-custom" />
-                <span class="fw-medium">Đăng Nhập Với Google</span>
+                    <!-- PASSWORD -->
+                    <div class="form-group mb-3 position-relative">
+                        <label class="form-label">Mật Khẩu</label>
+                        <input type="{{showPassword ? 'text' : 'password'}}"
+                               class="form-control"
+                               ng-model="password">
+                        <i class="fa-solid fa-eye position-absolute top-0 end-0 mt-5 me-3"
+                           ng-click="togglePasswordVisibility()"></i>
+                    </div>
+
+                    <div class="form-group mb-3 position-relative">
+                        <label class="form-label">Nhập Lại Mật Khẩu</label>
+                        <input type="{{showPassword ? 'text' : 'password'}}"
+                               class="form-control"
+                               ng-model="confirmPassword">
+                        <i class="fa-solid fa-eye position-absolute top-0 end-0 mt-5 me-3"
+                           ng-click="togglePasswordVisibility()"></i>
+
+                        <small class="text-danger"
+                               ng-if="confirmPassword && password !== confirmPassword">
+                            Mật khẩu nhập lại không khớp!
+                        </small>
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-danger w-100"
+                            ng-disabled="password !== confirmPassword">
+                        Đăng Ký
+                    </button>
+
+                    <p class="text-center mt-3">
+                        Bạn đã có tài khoản?
+                        <a href="#!login" class="text-danger">Đăng nhập ngay</a>
+                    </p>
+
+                    <a href="#!password/forgot" class="text-danger d-block text-center">
+                        Quên mật khẩu
+                    </a>
+                </form>
+
+                <p class="text-center fw-bold my-3">Hoặc</p>
+
+                <div class="d-flex flex-column gap-3">
+                    <div class="login-fb d-flex justify-content-center align-items-center gap-2 py-2 rounded-3">
+                        <img src="./src/assets/img/icon/icon-fb.svg" class="icon-size-custom">
+                        <span class="text-white fw-medium">Đăng Nhập Với Facebook</span>
+                    </div>
+
+                    <div class="login-gg d-flex justify-content-center align-items-center gap-2 py-2 rounded-3">
+                        <img src="./src/assets/img/icon/icon-gg.svg" class="icon-size-custom">
+                        <span class="fw-medium">Đăng Nhập Với Google</span>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

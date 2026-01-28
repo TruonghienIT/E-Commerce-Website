@@ -15,7 +15,7 @@ const sendMail = asyncHandler(async (data) => {
     });
 
     let info = await transporter.sendMail({
-        from: 'TokyoLife <no-reply@tokyolife.vn>',
+        from: 'TECHLIFE <no-reply@techlife.vn>',
         to: email,
         subject: subject,
         html: html

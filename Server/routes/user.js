@@ -4,6 +4,8 @@ const { verifyAccessToken, isAdmin } = require('../middlewares/verifyToken');
 
 router.post('/register', userCtrl.register);
 router.post('/login', userCtrl.login);
+router.post('/login-google', userCtrl.loginGoogle);
+
 router.get('/getCurrent', verifyAccessToken, userCtrl.getCurrent);
 
 router.post('/refreshToken', userCtrl.refreshAccessToken);

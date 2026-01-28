@@ -6,6 +6,51 @@ const jwt = require('jsonwebtoken');
 const sendMail = require('../utils/sendMail');
 const crypto = require('crypto');
 
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+/* ================= GOOGLE LOGIN ================= */
+const loginGoogle = asyncHandler(async (req, res) => {
+    const { token } = req.body;
+    if (!token) throw new Error('Token Google không tồn tại');
+
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { email, name, sub } = ticket.getPayload();
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+        user = await User.create({
+            name,
+            email,
+            googleId: sub,
+            password: crypto.randomBytes(16).toString('hex'),
+        });
+    }
+
+    if (user.isBlocked) throw new Error('Tài khoản đã bị khóa');
+
+    const accessToken = generateAccessToken(user._id, user.name, user.role);
+    const refreshToken = generateRefreshToken(user._id);
+
+    await User.findByIdAndUpdate(user._id, { refreshToken });
+
+    res.status(200).json({
+        success: true,
+        accessToken,
+        userData: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        },
+    });
+});
+
 //register
 const register = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -444,6 +489,7 @@ const uploadImagesUser = asyncHandler(async (req, res) => {
 module.exports = {
     register,
     login,
+    loginGoogle,
     getCurrent,
     refreshAccessToken,
     logout,

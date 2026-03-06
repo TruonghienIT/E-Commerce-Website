@@ -132,7 +132,7 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
 
     $scope.exportToPDF = function (order) {
         var totalAmount = 0; // Biến để lưu trữ tổng tiền
-        convertImgToDataURLviaFileReader('./src/assets/img/logo2.png', function (base64Img) {
+        convertImgToDataURLviaFileReader('./src/assets/img/logo.png', function (base64Img) {
 
             var docDefinition = {
                 content: [

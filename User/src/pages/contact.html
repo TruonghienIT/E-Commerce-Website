@@ -1,0 +1,35 @@
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Liên Hệ Với Chúng Tôi</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Thông Tin Liên Hệ</h5>
+            <p><strong>Email:</strong> admin@techlife.vn</p>
+            <p><strong>Hotline:</strong> 0123 456 789</p>
+            <p><strong>Địa chỉ:</strong> 129 Trần Phú, Hà Đông, Hà Nội, Việt Nam</p>
+        </div>
+
+        <div class="col-md-6">
+            <form ng-submit="sendContact()">
+                <div class="mb-3">
+                    <label>Họ và Tên</label>
+                    <input type="text" class="form-control" ng-model="contact.name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" class="form-control" ng-model="contact.email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Nội dung</label>
+                    <textarea class="form-control" rows="4" ng-model="contact.message" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-danger w-100">
+                    Gửi Liên Hệ
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

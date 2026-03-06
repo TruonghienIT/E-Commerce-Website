@@ -47,7 +47,7 @@ app.controller("LoginController", function ($scope, $rootScope, $window, APIServ
             {
                 theme: "outline",
                 size: "large",
-                width: 400,
+                width: 450,
                 text: "signin_with",
                 shape: "rectangular",
                 logo_alignment: "center",

@@ -66,4 +66,12 @@ app.service('DataServices', function ($http, APIService) {
                 console.error('Lỗi khi gửi yêu cầu API:', error);
             });
     }
+
+    // =============================
+    // ⭐ Lấy đánh giá trung bình
+    // =============================
+    service.getAverageRating = function () {
+        return APIService.callAPI('product/rating/average', 'GET', null, headers)
+            .then(res => res.data.averageRating);
+    };
 })

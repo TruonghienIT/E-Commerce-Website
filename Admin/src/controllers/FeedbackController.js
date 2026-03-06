@@ -6,7 +6,6 @@ app.controller('FeedbackController', function ($rootScope, $scope, $timeout, Dat
         'Authorization': 'Bearer ' + token,
     };
 
-
     $scope.products = [];
     $scope.currentPage = 1;
     $scope.itemsPerPage = 5;
@@ -31,7 +30,6 @@ app.controller('FeedbackController', function ($rootScope, $scope, $timeout, Dat
         var endIndex = startIndex + $scope.itemsPerPage;
         $scope.displayedProducts = $scope.products.slice(startIndex, endIndex);
 
-        // Tính toán số trang
         $scope.pages = [];
         var totalPages = Math.ceil($scope.products.length / $scope.itemsPerPage);
         for (var i = 1; i <= totalPages; i++) {
@@ -42,14 +40,23 @@ app.controller('FeedbackController', function ($rootScope, $scope, $timeout, Dat
     $scope.setCurrentPage = function (page) {
         $scope.currentPage = page;
         updateDisplayedProduct();
-    }
+    };
 
+    // ⭐⭐⭐ FIX CHÍNH Ở ĐÂY
+    $scope.getStars = function (rating) {
+        rating = Number(rating) || 0;
+        return new Array(rating);
+    };
+
+    // ===== DETAIL =====
     if ($routeParams.id) {
         DataServices.getProductById($routeParams.id).then(function (response) {
             $scope.product = response;
             $scope.rating = $scope.product.rating;
 
-            if ($scope.rating.length === 0) {
+            console.log("Rating list:", $scope.rating); // debug
+
+            if (!$scope.rating || $scope.rating.length === 0) {
                 swal('Thông báo', 'Sản phẩm chưa có đánh giá nào', 'info');
                 $timeout(function () {
                     window.location.href = '#!feedback';
@@ -57,5 +64,4 @@ app.controller('FeedbackController', function ($rootScope, $scope, $timeout, Dat
             }
         });
     }
-
 });

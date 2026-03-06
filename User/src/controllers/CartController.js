@@ -1,7 +1,7 @@
 app.controller("CartController", function ($scope, $rootScope, $timeout, $window, DataServices) {
     $window.scrollTo(0, 0);
 
-    $rootScope.title = 'Tokyolife | Giỏ hàng';
+    $rootScope.title = 'TechLife | Giỏ hàng';
 
     if ($window.localStorage.getItem('discount')) {
         $scope.discount = parseFloat($window.localStorage.getItem('discount'));

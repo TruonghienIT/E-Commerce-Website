@@ -1,3 +1,16 @@
+<style>
+    .custom-card-hover{
+    border-radius:16px;
+    transition: all .3s ease;
+    cursor:pointer;
+    background:#fff;
+    }
+
+    .custom-card-hover:hover{
+        transform: translateY(-6px);              /* ⭐ bay lên */
+        box-shadow: 0 20px 40px rgba(0,0,0,.12);  /* ⭐ bóng mềm */
+    }
+</style>
 <main class="body">
     <div class="container">
         <section class="carousel mt-4">
@@ -35,8 +48,8 @@
                 </div>
             </div>
 
-            <div class="row mt-3 row-gap-4" ng-show="loading">
-                <div class="col-12 col-md-2" ng-repeat="n in [].constructor(6) track by $index">
+            <div class="row mt-3 g-4 row-cols-2 row-cols-md-3 row-cols-xl-5" ng-show="loading">
+                <div class="col" ng-repeat="n in [].constructor(6) track by $index">
                     <div class="card" aria-hidden="true">
                         <img src="https://phutungnhapkhauchinhhang.com/wp-content/uploads/2020/06/default-thumbnail.jpg"
                             class="card-img-top" alt="...">
@@ -58,35 +71,42 @@
             </div>
 
 
-            <div class="row mt-3 row-gap-4">
-                <div class="col-6 col-md-4 col-xl-2" ng-repeat="product in flashSaleProducts | limitTo:6 ">
-                    <div class="card position-relative custom-card-hover p-1">
+            <div class="row mt-3 g-4 row-cols-2 row-cols-md-3 row-cols-xl-5">
+                <div class="col" ng-repeat="product in flashSaleProducts | limitTo:8">
+                    <div class="card position-relative custom-card-hover p-1 h-100 d-flex flex-column">
+
                         <a ng-href="#!detail/{{ product._id }}" class="nav-link p-2">
-                            <img src="{{ product.images[0] }}" class="img-fluid card-img-top">
+                            <img ng-src="{{ product.images[0] }}" class="img-fluid card-img-top"
+                                style="height:220px;object-fit:cover;">
                         </a>
-                        <div class="card-body p-2">
+
+                        <div class="card-body p-2 d-flex flex-column">
                             <a class="nav-link fs-7" ng-href="#!detail/{{ product._id }}">
                                 {{ product.title }}
                             </a>
 
-                            <div class="d-flex align-items-center justify-content-start gap-2">
+                            <div class="mt-auto d-flex align-items-center gap-2">
                                 <p class="text-danger fw-bold mb-0">
-                                    {{ product.sale > 0 ? ((product.price - (product.price * product.sale / 100)) |
-                                    currency:'':'0') + 'đ' : (product.price | currency:'':'0') + 'đ' }}
+                                    {{ product.sale > 0
+                                        ? ((product.price - (product.price * product.sale / 100)) | currency:'':'0') + 'đ'
+                                        : (product.price | currency:'':'0') + 'đ' }}
                                 </p>
                                 <p class="mb-0 fs-8 text-decoration-line-through">
                                     {{ product.sale > 0 ? (product.price | currency:'':'0') + 'đ' : '' }}
                                 </p>
                             </div>
-
                         </div>
 
-                        <button class="btn btn-danger w-50 mb-2 ms-1" data-bs-toggle="modal"
-                            data-bs-target="#showDetail" ng-click="showDetail(product)">
+                        <!-- ⭐ luôn nằm đáy -->
+                        <button class="btn btn-danger w-50 mb-2 ms-2 mt-auto"
+                                data-bs-toggle="modal"
+                                data-bs-target="#showDetail"
+                                ng-click="showDetail(product)">
                             <i class="fa-solid fa-cart-plus"></i>
                         </button>
 
-                        <span class="badge text-bg-danger position-absolute p-2" ng-if="product.sale > 0">
+                        <span class="badge text-bg-danger position-absolute p-2"
+                            ng-if="product.sale > 0">
                             {{ product.sale }}%
                         </span>
                     </div>
@@ -100,8 +120,8 @@
                     <h3 class="text-center mb-3">Sản Phẩm Mới Ra Mắt</h3>
                 </div>
 
-                <div class="row mt-3 row-gap-4" ng-show="loading">
-                    <div class="col-12 col-md-2" ng-repeat="n in [].constructor(6) track by $index">
+                <div class="row mt-3 g-4 row-cols-2 row-cols-md-3 row-cols-xl-5" ng-show="loading">
+                    <div class="col" ng-repeat="n in [].constructor(6) track by $index">
                         <div class="card" aria-hidden="true">
                             <img src="https://phutungnhapkhauchinhhang.com/wp-content/uploads/2020/06/default-thumbnail.jpg"
                                 class="card-img-top" alt="...">
@@ -123,32 +143,40 @@
                 </div>
 
 
-                <div class="row mt-3 row-gap-4" ng-hide="newProductsLoading">
-                    <div class="col-6 col-md-4 col-xl-2" ng-repeat="product in newProducts | limitTo: 6 ">
-                        <div class="card position-relative custom-card-hover">
+                <div class="row mt-3 g-4 row-cols-2 row-cols-md-3 row-cols-xl-5" ng-hide="newProductsLoading">
+                    <div class="col" ng-repeat="product in newProducts | limitTo: 10 ">
+                        <div class="card position-relative custom-card-hover h-100 d-flex flex-column">
                             <a ng-href="#!detail/{{ product._id }}" class="nav-link p-2">
-                                <img src="{{ product.images[0] }}" class="img-fluid card-img-top">
+                                <img ng-src="{{ product.images[0] }}" class="img-fluid card-img-top"
+                                    style="height:220px;object-fit:cover;">
                             </a>
-                            <div class="card-body p-2">
+
+                            <div class="card-body p-2 d-flex flex-column">
                                 <a class="nav-link fs-7" ng-href="#!detail/{{ product._id }}">
                                     {{ product.title }}
                                 </a>
 
-                                <div class="d-flex align-items-center justify-content-start gap-2">
+                                <div class="mt-auto d-flex align-items-center gap-2">
                                     <p class="text-danger fw-bold mb-0">
-                                        {{ product.sale > 0 ? ((product.price - (product.price * product.sale / 100)) |
-                                        currency:'':'0') + 'đ' : (product.price | currency:'':'0') + 'đ' }}
+                                        {{ product.sale > 0
+                                            ? ((product.price - (product.price * product.sale / 100)) | currency:'':'0') + 'đ'
+                                            : (product.price | currency:'':'0') + 'đ' }}
                                     </p>
                                     <p class="mb-0 fs-8 text-decoration-line-through">
                                         {{ product.sale > 0 ? (product.price | currency:'':'0') + 'đ' : '' }}
                                     </p>
                                 </div>
                             </div>
-                            <button class="btn btn-danger w-50 mb-2 ms-1" data-bs-toggle="modal"
-                                data-bs-target="#showDetail" ng-click="showDetail(product)">
+
+                            <button class="btn btn-danger w-50 mb-2 ms-2 mt-auto"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#showDetail"
+                                    ng-click="showDetail(product)">
                                 <i class="fa-solid fa-cart-plus"></i>
                             </button>
-                            <span class="badge text-bg-danger position-absolute p-2" ng-if="product.sale > 0">
+
+                            <span class="badge text-bg-danger position-absolute p-2"
+                                ng-if="product.sale > 0">
                                 {{ product.sale }}%
                             </span>
                         </div>
@@ -165,8 +193,8 @@
                     <h3 class="text-center mb-3">Sản Phẩm Nhiều Lượt Xem</h3>
                 </div>
 
-                <div class="row mt-3 row-gap-4" ng-show="loading">
-                    <div class="col-12 col-md-2" ng-repeat="n in [].constructor(6) track by $index">
+                <div class="row mt-3 g-4 row-cols-2 row-cols-md-3 row-cols-xl-5" ng-show="loading">
+                    <div class="col" ng-repeat="n in [].constructor(6) track by $index">
                         <div class="card" aria-hidden="true">
                             <img src="https://phutungnhapkhauchinhhang.com/wp-content/uploads/2020/06/default-thumbnail.jpg"
                                 class="card-img-top" alt="...">
@@ -188,32 +216,40 @@
                 </div>
 
 
-                <div class="row mt-3 row-gap-4" ng-hide="viewProductsLoading">
-                    <div class="col-6 col-md-4 col-xl-2" ng-repeat="product in viewProducts | limitTo:8">
-                        <div class="card position-relative custom-card-hover">
+                <div class="row mt-3 g-4 row-cols-2 row-cols-md-3 row-cols-xl-5" ng-hide="viewProductsLoading">
+                    <div class="col" ng-repeat="product in viewProducts | limitTo:5">
+                        <div class="card position-relative custom-card-hover h-100 d-flex flex-column">
                             <a ng-href="#!detail/{{ product._id }}" class="nav-link p-2">
-                                <img src="{{ product.images[0] }}" class="img-fluid card-img-top">
+                                <img ng-src="{{ product.images[0] }}" class="img-fluid card-img-top"
+                                    style="height:220px;object-fit:cover;">
                             </a>
-                            <div class="card-body p-2">
+
+                            <div class="card-body p-2 d-flex flex-column">
                                 <a class="nav-link fs-7" ng-href="#!detail/{{ product._id }}">
                                     {{ product.title }}
                                 </a>
 
-                                <div class="d-flex align-items-center justify-content-start gap-2">
+                                <div class="mt-auto d-flex align-items-center gap-2">
                                     <p class="text-danger fw-bold mb-0">
-                                        {{ product.sale > 0 ? ((product.price - (product.price * product.sale / 100)) |
-                                        currency:'':'0') + 'đ' : (product.price | currency:'':'0') + 'đ' }}
+                                        {{ product.sale > 0
+                                            ? ((product.price - (product.price * product.sale / 100)) | currency:'':'0') + 'đ'
+                                            : (product.price | currency:'':'0') + 'đ' }}
                                     </p>
                                     <p class="mb-0 fs-8 text-decoration-line-through">
                                         {{ product.sale > 0 ? (product.price | currency:'':'0') + 'đ' : '' }}
                                     </p>
                                 </div>
                             </div>
-                            <button class="btn btn-danger w-50 mb-2 ms-1" data-bs-toggle="modal"
-                                data-bs-target="#showDetail" ng-click="showDetail(product)">
+
+                            <button class="btn btn-danger w-50 mb-2 ms-2 mt-auto"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#showDetail"
+                                    ng-click="showDetail(product)">
                                 <i class="fa-solid fa-cart-plus"></i>
                             </button>
-                            <span class="badge text-bg-danger position-absolute p-2" ng-if="product.sale > 0">
+
+                            <span class="badge text-bg-danger position-absolute p-2"
+                                ng-if="product.sale > 0">
                                 {{ product.sale }}%
                             </span>
                         </div>

@@ -1,3 +1,9 @@
+<style>
+    .chart-container {
+        position: relative;
+        height: 450px;
+    }
+</style>
 <div class="content">
     <div class="shadow-sm px-5 py-3 shadow-lg">
         <h5 class="mb-0 fw-semibold">Admin Dashboard</h4>
@@ -49,7 +55,7 @@
                         <div class="col-md-8">
                             <div class="card-body">
                                 <p class="card-title fw-medium fs-5">Sản Phẩm</p>
-                                <h5 class="fw-bold">1.149</h5>
+                                <h5 class="fw-bold">{{ totalProducts | number }}</h5>
                             </div>
                         </div>
                     </div>
@@ -64,8 +70,8 @@
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <p class="card-title fw-medium fs-5">Báo Cáo</p>
-                                <h5 class="fw-bold">12</h5>
+                                <p class="card-title fw-medium fs-5">Đánh Giá</p>
+                                <h5 class="fw-bold">{{ avgRating | number:1 }} ⭐</h5>
                             </div>
                         </div>
                     </div>
@@ -148,7 +154,9 @@
                         <option ng-repeat="month in months" value="{{month}}">Tháng {{month}}</option>
                     </select>
                 </div>
-                <canvas id="myChart"></canvas>
+                <div class="chart-container">
+                    <canvas id="myChart"></canvas>
+                </div>
 
             </div>
 
@@ -168,7 +176,26 @@
                                 <div class="col-md-10">
                                     <div class="card-body d-flex align-items-center justify-content-between">
                                         <div>
-                                            <h5 class="card-title">Trần Thị B</h5>
+                                            <h5 class="card-title">Trương Công Hiện</h5>
+                                            <p class="mb-0 text-secondary fs-6">Đang Trực Tuyến</p>
+                                        </div>
+
+                                        <a href="" class="badge text-bg-primary">Xem Chi Tiết</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="row g-0 px-4 py-2">
+                                <div class="col-md-2 d-flex align-items-center justify-content-between">
+                                    <img src="./src/assets/img/avatar.jpg"
+                                        class="img-fluid rounded-circle w-100 m-auto h-auto" alt="...">
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="card-body d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <h5 class="card-title">Nguyễn Việt Hoàng</h5>
                                             <p class="mb-0 text-secondary fs-6">Truy Cập 25 Phút Trước</p>
                                         </div>
 
@@ -187,7 +214,7 @@
                                 <div class="col-md-10">
                                     <div class="card-body d-flex align-items-center justify-content-between">
                                         <div>
-                                            <h5 class="card-title">Nguyễn Văn A</h5>
+                                            <h5 class="card-title">Hà Nguyên Vũ</h5>
                                             <p class="mb-0 text-secondary fs-6">Đang Trực Tuyến</p>
                                         </div>
 
@@ -197,6 +224,24 @@
                             </div>
                         </div>
 
+                        <div class="card mb-3">
+                            <div class="row g-0 px-4 py-2">
+                                <div class="col-md-2 d-flex align-items-center justify-content-between">
+                                    <img src="./src/assets/img/avatar.jpg"
+                                        class="img-fluid rounded-circle w-100 m-auto h-auto" alt="...">
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="card-body d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <h5 class="card-title">Nguyễn Văn A</h5>
+                                            <p class="mb-0 text-secondary fs-6">Truy Cập 10 Phút Trước</p>
+                                        </div>
+
+                                        <a href="" class="badge text-bg-primary">Xem Chi Tiết</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -216,10 +261,10 @@
 
                     <tbody>
                         <tr>
-                            <td>CHÀO BẠN MỚI - APP TOKYOLIFE TẶNG MIỄN PHÍ MẶT NẠ SỦI BỌT DƯỠNG DA TOKYOLIFE
+                            <td>KHÁM PHÁ MACBOOK M3 – HIỆU NĂNG ĐỘT PHÁ CHO DÂN CÔNG NGHỆ
                             </td>
                             <td>Admin</td>
-                            <td>12-04-2023</td>
+                            <td>23-02-2026</td>
                             <td>
                                 <a href="" class="btn btn-danger">
                                     <i class="fa-solid fa-trash"></i>
@@ -231,10 +276,10 @@
                         </tr>
 
                         <tr>
-                            <td>TokyoLife được vinh danh “Giải thưởng Hành động vì Cộng đồng”
+                            <td>IPHONE 15 PRO MAX CÓ GÌ MỚI? ĐÁNH GIÁ CHI TIẾT TỪ TECHLIFE
                             </td>
                             <td>Nguyễn Văn A</td>
-                            <td>12-04-2023</td>
+                            <td>28-02-2026</td>
                             <td>
                                 <a href="" class="btn btn-danger">
                                     <i class="fa-solid fa-trash"></i>
@@ -246,9 +291,9 @@
                         </tr>
 
                         <tr>
-                            <td>HAPPY 8/3 TẶNG MIỄN PHÍ NƯỚC HOA PHÁP DÀNH RIÊNG THÀNH VIÊN APP</td>
+                            <td>TOP PHỤ KIỆN APPLE ĐÁNG MUA NHẤT NĂM 2026</td>
                             <td>Admin</td>
-                            <td>12-04-2023</td>
+                            <td>03-03-2026</td>
                             <td>
                                 <a href="" class="btn btn-danger">
                                     <i class="fa-solid fa-trash"></i>
@@ -260,10 +305,9 @@
                         </tr>
 
                         <tr>
-                            <td>TÍCH CỰC ĐÀO TẠO NGHỀ GẮN VỚI GIẢI QUYẾT VIỆC LÀM NGƯỜI KHUYẾT TẬT
-                            </td>
+                            <td>SO SÁNH AIRPODS PRO 2 VÀ AIRPODS 3: NÊN CHỌN LOẠI NÀO?</td>
                             <td>Nguyễn Văn A</td>
-                            <td>12-04-2023</td>
+                            <td>15-03-2026</td>
                             <td>
                                 <a href="" class="btn btn-danger">
                                     <i class="fa-solid fa-trash"></i>
@@ -275,10 +319,9 @@
                         </tr>
 
                         <tr>
-                            <td>CHÀO BẠN MỚI - APP TOKYOLIFE TẶNG MIỄN PHÍ MẶT NẠ SỦI BỌT DƯỠNG DA TOKYOLIFE
-                            </td>
+                            <td>HƯỚNG DẪN CHỌN IPAD PHÙ HỢP CHO SINH VIÊN VÀ DÂN VĂN PHÒNG</td>
                             <td>Admin</td>
-                            <td>12-04-2023</td>
+                            <td>25-04-2023</td>
                             <td>
                                 <a href="" class="btn btn-danger">
                                     <i class="fa-solid fa-trash"></i>

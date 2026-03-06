@@ -30,6 +30,10 @@ app.config(function ($routeProvider) {
             templateUrl: './src/pages/product/add.html',
             controller: 'ProductController'
         })
+        .when('/product/edit', {
+            templateUrl: './src/pages/product/edit.html',
+            controller: 'ProductController'
+        })
         .when('/coupon', {
             templateUrl: './src/pages/coupon/coupon.html',
             controller: 'CouponController'
@@ -37,6 +41,10 @@ app.config(function ($routeProvider) {
         .when('/coupon/add', {
             templateUrl: './src/pages/coupon/add.html',
             controller: 'CouponController'
+        })
+        .when("/coupon/edit", {
+            templateUrl: "./src/pages/coupon/edit.html",
+            controller: "CouponController"
         })
         .when('/order', {
             templateUrl: './src/pages/order/order.html',

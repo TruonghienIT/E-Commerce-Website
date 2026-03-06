@@ -27,8 +27,15 @@
                         <div class="star-group">
                             <span ng-if="product.totalRating === 0">Chưa có đánh giá</span>
 
-                            <i class="fa-solid fa-star text-warning"
-                                ng-repeat="i in [].constructor(product.totalRating) track by $index"></i>
+                            <div ng-if="product.totalRating > 0"
+             class="d-flex align-items-center gap-1">
+
+            <span class="fw-semibold">
+                {{ product.totalRating | number:1 }}
+            </span>
+
+            <i class="fa-solid fa-star text-warning"></i>
+        </div>
                         </div>
                     </td>
                     <td>

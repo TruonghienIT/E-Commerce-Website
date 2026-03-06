@@ -1,54 +1,101 @@
 app.controller("DashboardController", function ($rootScope, $scope, DataServices, APIService, $document) {
     $rootScope.title = "Admin Dashboard";
-    $scope.selectedMonth = ''; // Biến để lưu trữ tháng được chọn từ dropdown
+
+    $scope.selectedMonth = '';
     $scope.chartData = {};
     $scope.chartOptions = {};
+    $scope.orders = [];
 
+    // =============================
+    // 🔥 Lấy tổng số sản phẩm
+    // =============================
+    DataServices.getAllProduct().then(function (products) {
+        $scope.products = products || [];
+        $scope.totalProducts = $scope.products.length;
+    }).catch(function (err) {
+        console.error("Lỗi lấy sản phẩm:", err);
+        $scope.totalProducts = 0;
+    });
+
+    // =============================
+    // ⭐ Đánh giá trung bình
+    // =============================
+    $scope.avgRating = 0;
+
+    DataServices.getAverageRating().then(function (avg) {
+        $scope.avgRating = avg || 0;
+    });
+
+    // =============================
+    // Cập nhật chart
+    // =============================
     $scope.updateChartData = function () {
+        if (!$scope.orders || !$scope.orders.length) return;
+
         var filteredOrders = $scope.filterOrdersByMonth();
         var revenueByMonth = calculateRevenueByMonth(filteredOrders);
         updateChartData(revenueByMonth);
     };
 
+    // =============================
+    // Tính doanh thu theo tháng (ĐÃ FIX NULL)
+    // Chỉ tính doanh thu từ đơn hàng đã giao hàng
+    // =============================
     function calculateRevenueByMonth(orders) {
         var revenueByMonth = {};
 
-        orders.forEach(function (order) {
-            // Chỉ tính doanh thu từ đơn hàng đã giao hàng
+        (orders || []).forEach(function (order) {
+            if (!order) return;
+
             if (order.status === 'Đã Giao Hàng') {
                 var month = new Date(order.createdAt).getMonth() + 1;
+
                 if (!revenueByMonth[month]) {
                     revenueByMonth[month] = 0;
                 }
-                var orderTotal = 0;
-                order.items.forEach(function (item) {
-                    orderTotal += item.product.price * item.quantity;
-                });
-                orderTotal -= order.discount;
-                revenueByMonth[month] += orderTotal;
 
+                var orderTotal = 0;
+
+                // 🔥 FIX NULL ITEMS
+                (order.items || []).forEach(function (item) {
+                    const price = item?.product?.price || 0;
+                    const qty = item?.quantity || 0;
+                    orderTotal += price * qty;
+                });
+
+                orderTotal -= order?.discount || 0;
+                revenueByMonth[month] += orderTotal;
             }
         });
 
         return revenueByMonth;
     }
 
+    // =============================
     // Lọc đơn hàng theo tháng được chọn
+    // =============================
     $scope.filterOrdersByMonth = function () {
+        if (!$scope.orders) return [];
+
         if ($scope.selectedMonth === '') {
-            return $scope.orders; // Không có tháng nào được chọn, trả về tất cả các đơn hàng
+            return $scope.orders;
         } else {
             return $scope.orders.filter(function (order) {
+                if (!order?.createdAt) return false;
                 var orderMonth = new Date(order.createdAt).getMonth() + 1;
                 return orderMonth.toString() === $scope.selectedMonth;
             });
         }
     };
 
+    // =============================
     // Hàm cập nhật dữ liệu cho biểu đồ
+    // =============================
     function updateChartData(revenueByMonth) {
         $scope.chartData = {
-            labels: Object.keys(revenueByMonth).map(function (month) { return 'Tháng ' + month; }),
+            labels: Object.keys(revenueByMonth).map(function (month) {
+                return 'Tháng ' + month;
+            }),
             datasets: [{
                 label: "Doanh Thu",
                 backgroundColor: "rgba(75, 192, 192, 0.2)",
@@ -58,68 +105,102 @@ app.controller("DashboardController", function ($rootScope, $scope, DataServices
             }]
         };
 
-        // Tạo biểu đồ mới
         createChart();
     }
 
+    // =============================
     // Tạo biểu đồ
+    // =============================
     function createChart() {
-        var ctx = document.getElementById('myChart').getContext('2d');
+        var canvas = document.getElementById('myChart');
+        if (!canvas) return;
+
+        var ctx = canvas.getContext('2d');
+
         if ($scope.myChart) {
             $scope.myChart.destroy();
         }
+
         $scope.myChart = new Chart(ctx, {
             type: 'bar',
-            data: $scope.chartData
+            data: $scope.chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
         });
     }
 
+    // =============================
     // Lấy danh sách đơn hàng
+    // =============================
     DataServices.getAllOrder().then(function (response) {
-        $scope.orders = response;
-        $scope.months = getDistinctMonths(response);
+        $scope.orders = response || [];
+
+        $scope.months = getDistinctMonths($scope.orders);
+
         $scope.waitingOrders = $scope.orders.filter(function (order) {
-            return order.status === 'Chờ Xác Nhận';
+            return order?.status === 'Chờ Xác Nhận';
         });
 
-        //tính tổng tiền đơn hàng đã giao, giá trị này cố định không thay đổi
+        // =============================
+        // Tổng doanh thu fix null
+        // =============================
         $scope.totalRevenue1 = 0;
-        $scope.orders.forEach(function (order) {
-            if (order.status === 'Đã Giao Hàng') {
+
+        ($scope.orders || []).forEach(function (order) {
+            if (order?.status === 'Đã Giao Hàng') {
                 var orderTotal = 0;
-                order.items.forEach(function (item) {
-                    orderTotal += item.product.price * item.quantity;
+
+                (order.items || []).forEach(function (item) {
+                    const price = item?.product?.price || 0;
+                    const qty = item?.quantity || 0;
+                    orderTotal += price * qty;
                 });
-                orderTotal -= order.discount;
+
+                orderTotal -= order?.discount || 0;
                 $scope.totalRevenue1 += orderTotal;
             }
         });
 
-        // Cập nhật dữ liệu cho biểu đồ mặc định
+        // render chart lần đầu
         $scope.updateChartData();
+    }).catch(function (err) {
+        console.error("Lỗi load orders:", err);
     });
 
-    // Hàm lấy danh sách các tháng từ dữ liệu đơn hàng
+    // =============================
+    // Lấy danh sách tháng
+    // =============================
     function getDistinctMonths(orders) {
         var distinctMonths = [];
-        orders.forEach(function (order) {
+
+        (orders || []).forEach(function (order) {
+            if (!order?.createdAt) return;
+
             var month = new Date(order.createdAt).getMonth() + 1;
-            if (distinctMonths.indexOf(month.toString()) === -1) {
-                distinctMonths.push(month.toString());
+            var mStr = month.toString();
+
+            if (distinctMonths.indexOf(mStr) === -1) {
+                distinctMonths.push(mStr);
             }
         });
+
         return distinctMonths;
     }
 
-    // Hàm thay đổi trạng thái đơn hàng
+    // =============================
+    // Đổi trạng thái đơn
+    // =============================
     $scope.changeStatus = function (order) {
-        var status = {
-            status: 'Đã Xác Nhận'
-        };
+        if (!order?._id) return;
+
+        var status = { status: 'Đã Xác Nhận' };
 
         APIService.callAPI('bill/status/' + order._id, 'PUT', status)
-            .then(function (response) {
+            .then(function () {
                 swal('Thành công', 'Cập nhật trạng thái đơn hàng thành công', 'success');
+
                 $scope.waitingOrders = $scope.waitingOrders.filter(function (item) {
                     return item._id !== order._id;
                 });
@@ -131,5 +212,4 @@ app.controller("DashboardController", function ($rootScope, $scope, DataServices
                 console.log('Có lỗi xảy ra:', error);
             });
     };
-
 });

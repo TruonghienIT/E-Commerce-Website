@@ -31,7 +31,7 @@
                     <td>{{ coupon.createdAt | date: "dd-MM-yyyy" }}</td>
                     <td>{{ coupon.expiry | date: "dd-MM-yyyy"}}</td>
                     <td>
-                        <a class="btn btn-sm btn-primary" href="#!/coupon/edit/{{ coupon._id }}">
+                        <a class="btn btn-sm btn-primary" ng-click="editCoupon(coupon)">
                             <i class="fa-solid fa-edit"></i>
                         </a>
                         <button class="btn btn-sm btn-danger" ng-click="deleteCoupon(coupon._id)">

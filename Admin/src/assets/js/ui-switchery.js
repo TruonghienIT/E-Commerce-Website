@@ -24,7 +24,7 @@
                 var switchery = new Switchery(element[0], options);
 
                 element.bind("change", function () {
-                    ngModel.$setViewValue(element.is(":checked"));
+                    ngModel.$setViewValue(element[0].checked);
                 });
 
                 scope.$watch(attrs.ngModel, function (value) {

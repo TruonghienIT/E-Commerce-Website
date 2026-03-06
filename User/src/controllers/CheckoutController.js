@@ -1,5 +1,5 @@
 app.controller("CheckoutController", function ($scope, $rootScope, $timeout, $http, DataServices, $window) {
-    $rootScope.title = 'Tokyolife | Thanh Toán Đơn Hàng';
+    $rootScope.title = 'TechLife | Thanh Toán Đơn Hàng';
     $window.scrollTo(0, 0);
 
     if (!localStorage.getItem('cart') || JSON.parse(localStorage.getItem('cart')).length === 0) {

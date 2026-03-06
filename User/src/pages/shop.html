@@ -1,0 +1,248 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+    background:#f5f5f7;
+}
+
+/* ===== title ===== */
+.store-title{
+    font-size:48px;
+    font-weight:700;
+}
+
+.store-sub{
+    color:#6e6e73;
+    font-weight:500;
+}
+
+.category-scroll{
+    display:flex;
+    justify-content:center;
+    gap:64px;              /* ⭐ giãn rộng hơn */
+    overflow-x:auto;
+    padding:10px 0 20px;
+}
+
+.category-item{
+    text-decoration:none;
+    color:#1d1d1f;
+    font-size:16px;        /* ⭐ chữ to hơn */
+    font-weight:500;
+    text-align:center;
+    flex:0 0 auto;
+    padding:8px 6px;       /* ⭐ tăng vùng click */
+    transition:.25s;
+}
+
+.category-item img{
+    width:110px;           /* ⭐ ICON TO HƠN */
+    height:auto;
+    display:block;
+    margin:0 auto 8px;
+    transition:.25s;
+}
+
+/* hover kiểu Apple */
+.category-item:hover img{
+    transform:scale(1.08);
+}
+
+/* ===== section title ===== */
+.section-title{
+    font-size:32px;
+    font-weight:700;
+}
+
+.section-sub{
+    color:#6e6e73;
+    font-weight:500;
+}
+
+/* ===== card apple ===== */
+.apple-card{
+    border-radius:24px;
+    overflow:hidden;
+    border:none;
+    box-shadow:0 8px 30px rgba(0,0,0,.06);
+    transition:.25s;
+    height:100%;
+}
+
+.apple-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px rgba(0,0,0,.12);
+}
+
+/* dark card */
+.apple-dark{
+    background:#000;
+    color:#fff;
+}
+
+/* responsive title */
+@media(max-width:768px){
+    .store-title{
+        font-size:32px;
+    }
+}
+</style>
+
+<div class="container py-5" ng-controller="ShopController">
+
+    <!-- ===== HEADER ===== -->
+    <div class="mb-4">
+        <h1 class="store-title">
+            Cửa Hàng.
+            <span class="store-sub">Cách tốt nhất để mua sản phẩm bạn thích.</span>
+        </h1>
+    </div>
+
+    <!-- ===== CATEGORY ===== -->
+    <div class="category-scroll mb-5">
+        <a
+            ng-repeat="category in categories"
+            ng-href="#!product?category_id={{category._id}}"
+            class="category-item"
+        >
+            <img ng-src="{{category.icon}}">
+            {{category.title}}
+        </a>
+    </div>
+
+    <!-- ===== SECTION ===== -->
+    <div class="mb-4">
+        <h2 class="section-title">
+            Thế hệ mới nhất.
+            <span class="section-sub">Xem ngay có gì mới.</span>
+        </h2>
+    </div>
+
+    <!-- ===== CARDS ===== -->
+    <div class="row g-4">
+
+        <!-- card 1 -->
+        <div class="col-lg-4">
+            <div class="card apple-card p-4">
+                <h5 class="fw-bold">
+                    Mừng Ngày Trái Đất vào bất kỳ ngày nào.
+                </h5>
+                <p class="text-muted small">
+                    Bạn có thể tái chế miễn phí các thiết bị, phụ kiện
+                    và nhiều sản phẩm Apple ngay hôm nay và bất kể ngày nào.
+                </p>
+                <img src="Image/World.jpg" class="img-fluid mt-auto">
+            </div>
+        </div>
+
+        <!-- card 2 (dark) -->
+        <div class="col-lg-4">
+            <div class="card apple-card apple-dark p-4">
+                <h4 class="fw-bold">iPhone 16 Pro</h4>
+                <p class="small">
+                    Một iPhone cực đỉnh.<br>
+                    Từ 28.999.000đ hoặc 1.181.000đ/tháng trong 24 tháng*
+                </p>
+                <img src="Image/new.jpg" class="img-fluid mt-auto">
+            </div>
+        </div>
+
+        <!-- card 3 -->
+        <div class="col-lg-4">
+            <div class="card apple-card p-4">
+                <h4 class="fw-bold">Toàn bộ các thế hệ trong một khung hình.</h4>
+                <p class="text-muted small">
+                    Từ 2015 đến Series 10 mới nhất.<br>
+                    Từ 10.999.000đ hoặc 448.000đ/tháng trong 24 tháng*
+                </p>
+                <img src="Image/Watch/đa dạng.jpg" class="img-fluid mt-auto">
+            </div>
+        </div>
+
+        <!-- card 4 -->
+        <div class="col-lg-4">
+            <div class="card apple-card p-4">
+                <h5 class="fw-bold">
+                    iPad Air.
+                </h5>
+                <p class="text-muted small">
+                    Nhanh như bay.<br>
+                    Từ 16.999.000đ hoặc 692.000đ/tháng trong 24 tháng*
+                </p>
+                <img src="Image/Ipad_nhanh_nhu_bay.jpg" class="img-fluid mt-auto">
+            </div>
+        </div>
+
+        <!-- card 5 -->
+        <div class="col-lg-4">
+            <div class="card apple-card p-4">
+                <h4 class="fw-bold">Macbook Air</h4>
+                <p class="small">
+                    MMM* Mỏng Mà "Mượt"!.<br>
+                    Từ 26.999.000đ hoặc 692.000đ/tháng trong 24 tháng*
+                </p>
+                <img src="Image/Macbook Air.jpg" class="img-fluid mt-auto">
+            </div>
+        </div>
+
+        <!-- card 6 -->
+        <div class="col-lg-4">
+            <div class="card apple-card p-4">
+                <h4 class="fw-bold">Dây đeo Apple Watch</h4>
+                <p class="text-muted small">
+                    Thể hiện cảm xúc<br>
+                    Thỏa mãn giác quan
+                </p>
+                <img src="Image/dây đeo.jpg" class="img-fluid mt-auto">
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <br>
+
+    <!-- ===== SECTION ===== -->
+    <div class="mb-4">
+        <h2 class="section-title">
+            Phụ kiện.
+            <span class="section-sub">Những phụ kiện kết hợp hoàn hảo với thiết bị của bạn.</span>
+        </h2>
+    </div>
+    
+        <div class="row g-4">
+
+        <!-- card 1 -->
+        <div class="col-lg-4">
+            <div class="card apple-card p-4">
+                <h5 class="fw-bold">
+                    Khám phá tất cả các phụ kiện
+                </h5>
+                <img src="Image/khamphatatcaphukien.jpg" class="img-fluid mt-auto">
+            </div>
+        </div>
+
+        <!-- card 2 (dark) -->
+        <div class="col-lg-4">
+            <div class="card apple-card p-4">
+                <h4 class="fw-bold">Đón máy về</h4>
+                <p class="small">
+                    Các phụ kiện bạn yêu.<br>
+                    Với cách phối mới giữa nhiều màu sắc
+                </p>
+                <img src="Image/đón máy về.jpg" class="img-fluid mt-auto">
+            </div>
+        </div>
+
+        <!-- card 3 -->
+        <div class="col-lg-4">
+            <div class="card apple-card p-4">
+                <h4 class="fw-bold">Khám phá tất cả tai nghe</h4>
+                <img src="Image/Beats Solo 4.jpg" class="img-fluid mt-auto">
+            </div>
+        </div>
+
+    </div>
+    
+  </div>
+
+</div>

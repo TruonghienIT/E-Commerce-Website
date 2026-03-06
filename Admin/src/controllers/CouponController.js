@@ -57,4 +57,77 @@ app.controller("CouponController", function ($rootScope, $location, $timeout, $s
                 }
             });
     }
+
+    // ================= EDIT COUPON =================
+
+    // object chứa coupon đang sửa
+    $scope.editingCoupon = {};
+
+    // 👉 chuyển sang trang edit
+    $scope.editCoupon = function (coupon) {
+        $location.path('/coupon/edit').search({ id: coupon._id });
+    };
+
+    // 👉 load coupon khi vào trang edit
+    $scope.loadCouponDetail = function () {
+        const id = $location.search().id;
+
+        console.log("Coupon ID:", id);
+
+        if (!id) {
+            console.warn("Không có ID coupon");
+            return;
+        }
+
+        APIService.callAPI('coupon/' + id, 'GET', null, headers)
+            .then(function (res) {
+                console.log("Coupon data:", res.data);
+
+                // ✅ FIX ĐÚNG theo backend của bạn
+                $scope.editingCoupon = res.data.coupon;
+
+                // convert date cho input date
+                if ($scope.editingCoupon.createdAt) {
+                    $scope.editingCoupon.startDate =
+                        new Date($scope.editingCoupon.createdAt);
+                }
+
+                if ($scope.editingCoupon.expiry) {
+                    $scope.editingCoupon.expiry =
+                        new Date($scope.editingCoupon.expiry);
+                }
+            });
+    };
+
+    // 👉 UPDATE COUPON
+    $scope.updateCoupon = function () {
+        swal({
+            title: 'Đang cập nhật mã',
+            text: 'Vui lòng đợi...',
+            icon: 'info',
+            buttons: false
+        });
+
+        const id = $scope.editingCoupon._id;
+
+        const dataUpdate = {
+            name: $scope.editingCoupon.name,
+            discount: $scope.editingCoupon.discount,
+            startDate: $scope.editingCoupon.startDate,
+            expiry: $scope.editingCoupon.expiry
+        };
+
+        APIService.callAPI('coupon/' + id, 'PUT', dataUpdate, headers)
+            .then(function () {
+                swal('Thành Công', 'Cập nhật mã thành công', 'success');
+
+                $timeout(function () {
+                    $location.path('/coupon');
+                }, 800);
+            })
+            .catch(function (err) {
+                console.error(err);
+                swal('Error', err?.data?.mes || 'Cập nhật thất bại', 'error');
+            });
+    };
 });

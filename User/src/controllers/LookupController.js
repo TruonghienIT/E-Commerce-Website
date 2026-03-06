@@ -1,5 +1,5 @@
 app.controller("LookupController", function ($scope, $rootScope, DataServices) {
-    $rootScope.title = 'Tokyolife | Tra cứu đơn hàng';
+    $rootScope.title = 'TechLife | Tra cứu đơn hàng';
 
     $scope.lockup = function () {
         if ($scope.idBill) {

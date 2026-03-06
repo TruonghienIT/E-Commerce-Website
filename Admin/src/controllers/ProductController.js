@@ -9,7 +9,7 @@ app.controller("ProductController", function ($rootScope, $timeout, $scope, $loc
     $scope.products = [];
     $scope.categories = [];
     $scope.currentPage = 1;
-    $scope.itemsPerPage = 5;
+    $scope.itemsPerPage = 6;
     $scope.pages = [];
 
     DataServices.getAllCategory().then(function (response) {
@@ -182,4 +182,92 @@ app.controller("ProductController", function ($rootScope, $timeout, $scope, $loc
             });
     }
 
+    // ================= EDIT PRODUCT =================
+
+    // object chứa sản phẩm đang sửa
+    $scope.editingProduct = {
+        variants: []
+    };
+
+    // 👉 chuyển sang trang edit
+    $scope.editProduct = function (product) {
+        $location.path('/product/edit').search({ id: product._id });
+    };
+
+    // 👉 load sản phẩm khi vào trang edit
+    $scope.loadProductDetail = function () {
+        const id = $location.search().id;
+
+        console.log("ID nhận được:", id); // ⭐ THÊM DÒNG NÀY
+
+        if (!id) {
+            console.warn("Không có ID");
+            return;
+        }
+
+        APIService.callAPI('product/' + id, 'GET', null, headers)
+            .then(function (res) {
+                console.log("DATA:", res.data); // ⭐ debug
+
+                $scope.editingProduct = res.data.productData;
+
+                if (!$scope.editingProduct.variants) {
+                    $scope.editingProduct.variants = [];
+                }
+
+                // fix category
+                if ($scope.editingProduct.category?._id) {
+                    $scope.editingProduct.category =
+                        $scope.editingProduct.category._id;
+                }
+
+                // fix boolean
+                $scope.editingProduct.isFlashSale =
+                    !!$scope.editingProduct.isFlashSale;
+            });
+    };
+
+    // 👉 thêm variant khi edit
+    $scope.addVariantEdit = function () {
+        $scope.editingProduct.variants.push({
+            color: '',
+            size: '',
+            quantity: ''
+        });
+    };
+
+    // 👉 UPDATE PRODUCT (KHÔNG upload ảnh)
+    $scope.updateProduct = function () {
+        swal({
+            title: 'Đang cập nhật sản phẩm',
+            text: 'Vui lòng đợi...',
+            icon: 'info',
+            buttons: false
+        });
+
+        const id = $scope.editingProduct._id;
+
+        const productUpdate = {
+            title: $scope.editingProduct.title,
+            price: $scope.editingProduct.price,
+            sale: $scope.editingProduct.sale || 0,
+            description: $scope.editingProduct.description,
+            category: $scope.editingProduct.category,
+            variants: $scope.editingProduct.variants,
+            isFlashSale: $scope.editingProduct.isFlashSale
+        };
+
+        APIService.callAPI('product/' + id, 'PUT', productUpdate, headers)
+            .then(function () {
+                swal('Thành Công', 'Cập nhật thành công', 'success');
+
+                $timeout(function () {
+                    $location.path('/product');
+                }, 800);
+            })
+            .catch(function (err) {
+                console.error(err);
+                swal('Error', err?.data?.mes || 'Cập nhật thất bại', 'error');
+            });
+    };
 })

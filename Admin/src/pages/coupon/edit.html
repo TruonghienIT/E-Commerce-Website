@@ -1,0 +1,66 @@
+<div class="content" ng-init="loadCouponDetail()">
+    <!-- Header -->
+    <div class="shadow-sm px-5 py-3 shadow-lg">
+        <h5 class="mb-0 fw-semibold">Chỉnh Sửa Mã Giảm Giá</h5>
+    </div>
+
+    <!-- Form -->
+    <div class="px-5">
+        <form class="mt-5" ng-submit="updateCoupon()">
+
+            <!-- Tên mã -->
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên Mã Giảm Giá</label>
+                <input type="text"
+                    class="form-control"
+                    id="name"
+                    ng-model="editingCoupon.name"
+                    required>
+            </div>
+
+            <!-- Giảm giá -->
+            <div class="mb-3">
+                <label for="discount" class="form-label">Giảm Giá (%)</label>
+                <input type="string"
+                    class="form-control"
+                    id="discount"
+                    ng-model="editingCoupon.discount"
+                    min="0"
+                    max="100"
+                    required>
+            </div>
+
+            <!-- ✅ Ngày bắt đầu (MỚI THÊM) -->
+            <div class="mb-3">
+                <label for="startDate" class="form-label">Ngày Bắt Đầu</label>
+                <input type="date"
+                    class="form-control"
+                    id="startDate"
+                    ng-model="editingCoupon.startDate"
+                    required>
+            </div>
+
+            <!-- Ngày kết thúc -->
+            <div class="mb-3">
+                <label for="expiry" class="form-label">Ngày Kết Thúc</label>
+                <input type="date"
+                    class="form-control"
+                    id="expiry"
+                    ng-model="editingCoupon.expiry"
+                    required>
+            </div>
+
+            <!-- Buttons -->
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-danger">
+                    Cập Nhật
+                </button>
+
+                <!-- <a href="#!/coupon" class="btn btn-secondary">
+                    Quay lại
+                </a> -->
+            </div>
+
+        </form>
+    </div>
+</div>

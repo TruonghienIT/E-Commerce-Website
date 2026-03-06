@@ -1,4 +1,4 @@
-var app = angular.module('TokyoLife', ["ngRoute", "ngCookies", "angular-jwt"]);
+var app = angular.module('TechLife', ["ngRoute", "ngCookies", "angular-jwt"]);
 
 app.config(function ($routeProvider) {
     $routeProvider
@@ -53,5 +53,17 @@ app.config(function ($routeProvider) {
         .when("/profile/wishlist", {
             templateUrl: "./src/pages/wishlist.html?" + Math.random(),
             controller: "UserWishlistController"
+        })
+        .when("/contact", {
+            templateUrl: "./src/pages/contact.html?" + Math.random(),
+            controller: "ContactController"
+        })
+        .when("/about", {
+            templateUrl: "./src/pages/about.html?" + Math.random(),
+            controller: "AboutController"
+        })
+        .when("/shop", {
+            templateUrl: "./src/pages/shop.html?" + Math.random(),
+            controller: "ShopController"
         })
 });

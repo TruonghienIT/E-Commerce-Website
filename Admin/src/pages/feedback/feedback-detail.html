@@ -23,12 +23,13 @@
                     </td>
                     <td>
                         <div class="star-group">
-                            <div class="star-group">
-                                <span ng-if="product.totalRating === 0">Chưa có đánh giá</span>
+                            <span ng-if="!feedback.star || feedback.star === 0">
+                                Chưa có đánh giá
+                            </span>
 
-                                <i class="fa-solid fa-star text-warning"
-                                    ng-repeat="i in [].constructor(product.totalRating) track by $index"></i>
-                            </div>
+                            <i class="fa-solid fa-star text-warning"
+                            ng-repeat="i in getStars(feedback.star) track by $index">
+                            </i>
                         </div>
                     </td>
                     <td>

@@ -1277,6 +1277,11 @@ once@^1.3.0:
   dependencies:
     wrappy "1"
 
+openai@^6.27.0:
+  version "6.27.0"
+  resolved "https://registry.npmjs.org/openai/-/openai-6.27.0.tgz"
+  integrity sha512-osTKySlrdYrLYTt0zjhY8yp0JUBmWDCN+Q+QxsV4xMQnnoVFpylgKGgxwN8sSdTNw0G4y+WUXs4eCMWpyDNWZQ==
+
 package-json-from-dist@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/package-json-from-dist/-/package-json-from-dist-1.0.1.tgz"

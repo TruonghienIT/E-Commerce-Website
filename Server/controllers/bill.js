@@ -1,3 +1,4 @@
+const Product = require('../models/product');
 const Bill = require('../models/bill');
 const asyncHandler = require('express-async-handler');
 const sendMail = require('../utils/sendMail');
@@ -102,14 +103,42 @@ const getBillByUser = asyncHandler(async (req, res) => {
 
 //cập nhật trạng thái đơn hàng
 const updateStatusBill = asyncHandler(async (req, res) => {
-    const bill = await Bill.findById(req.params.id);
+
+    const bill = await Bill.findById(req.params.id).populate('items.product');
 
     if (!bill) {
         res.status(404);
         throw new Error('Không tìm thấy đơn hàng này');
     }
 
-    bill.status = req.body.status;
+    const newStatus = req.body.status;
+
+    // Khi admin xác nhận đơn
+    if (newStatus === "Đã Xác Nhận" && bill.status !== "Đã Xác Nhận") {
+
+
+        for (const item of bill.items) {
+
+            const product = await Product.findById(item.product._id);
+
+            const variant = product.variants.find(v =>
+                v._id.toString() === item.variantId.toString()
+            );
+
+            if (variant) {
+
+                variant.quantity -= item.quantity;
+
+                if (variant.quantity < 0) {
+                    variant.quantity = 0;
+                }
+            }
+
+            await product.save();
+        }
+    }
+
+    bill.status = newStatus;
     await bill.save();
 
     res.status(200).json({ success: true, data: bill });

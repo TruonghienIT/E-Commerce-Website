@@ -25,17 +25,32 @@ app.controller("CartController", function ($scope, $rootScope, $timeout, $window
     } else {
         $scope.cart = [];
         swal("Thông báo", "Giỏ hàng của bạn đang trống", "info")
-        $timeout(function () {
-            $window.location.href = '/';
-        }, 1000);
+        // $timeout(function () {
+        //     $window.location.href = '/';
+        // }, 1000);
     }
 
     // Thay đổi số lượng
     $scope.changeQuantity = function (operation, $index) {
+
+        let item = $scope.cart[$index];
+        let maxQuantity = item.variant.quantity;
+
         if (operation === 'increase') {
-            $scope.cart[$index].quantity++;
-        } else if (operation === 'decrease' && $scope.cart[$index].quantity > 1) {
-            $scope.cart[$index].quantity--;
+
+            if (item.quantity >= maxQuantity) {
+                swal("Lỗi!", "Số lượng sản phẩm không đủ", "error");
+                return;
+            }
+
+            item.quantity++;
+
+        } else if (operation === 'decrease') {
+
+            if (item.quantity > 1) {
+                item.quantity--;
+            }
+
         }
 
         $scope.updateTotalPrice();
@@ -103,6 +118,27 @@ app.controller("CartController", function ($scope, $rootScope, $timeout, $window
                 } else {
                     swal("Tất cả sản phẩm chưa được xoá!");
                 }
-            });
+            }); 
+    };
+
+    $scope.checkout = function () {
+
+        for (let i = 0; i < $scope.cart.length; i++) {
+
+            let item = $scope.cart[i];
+            let maxQuantity = item.variant.quantity;
+
+            if (item.quantity > maxQuantity) {
+
+                swal(
+                    "Lỗi!",
+                    "Sản phẩm '" + item.product.title + "' không đủ số lượng trong kho",
+                    "error"
+                );
+
+                return;
+            }
+        }
+        $window.location.href = "#!checkout";
     };
 });

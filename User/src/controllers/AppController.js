@@ -24,6 +24,25 @@ app.controller('AppController', function ($rootScope, $window, $timeout, jwtHelp
     }
 
     $rootScope.name = localStorage.getItem('name');
+    
+    // 🔥 HÀM KIỂM TRA GIỎ HÀNG
+    $rootScope.goToCart = function () {
+
+        if (!$rootScope.isLogin) {
+
+            swal({
+                title: "Bạn chưa đăng nhập",
+                text: "Vui lòng đăng nhập để xem giỏ hàng",
+                icon: "warning"
+            }).then(function () {
+                window.location.href = "#!login";
+            });
+
+            return;
+        }
+
+        window.location.href = "#!cart";
+    };
 
     //đăng xuất
     $rootScope.logout = function () {

@@ -13,6 +13,22 @@ app.controller("DetailController", function ($scope, APIService, $http, $rootSco
             $scope.product = product;
             $rootScope.title = product.title;
 
+            if (product.rating && product.rating.length > 0) {
+
+                var totalStar = 0;
+
+                product.rating.forEach(function (item) {
+                    totalStar += item.star;
+                });
+
+                $scope.product.averageRating = totalStar / product.rating.length;
+
+            } else {
+
+                $scope.product.averageRating = 0;
+
+            }
+
             $scope.selectedVariant = product.variants[0];
 
             $scope.getProductQuantity = function (selectedVariantId) {
@@ -49,6 +65,19 @@ app.controller("DetailController", function ($scope, APIService, $http, $rootSco
     };
 
     $scope.addToCart = function (product) {
+
+        // 🔒 KIỂM TRA ĐĂNG NHẬP
+        if (!$scope.token) {
+            swal({
+                title: "Bạn chưa đăng nhập!",
+                text: "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng",
+                icon: "warning",
+            }).then(function () {
+                window.location.href = "#!login";
+            });
+            return;
+        }
+
         var cart = JSON.parse(localStorage.getItem('cart')) || [];
 
         var selectedVariant = product.variants.find(function (variant) {
@@ -65,7 +94,7 @@ app.controller("DetailController", function ($scope, APIService, $http, $rootSco
                 title: "Lỗi!",
                 text: "Số lượng sản phẩm không đủ",
                 icon: "error",
-            })
+            });
             return;
         }
 
@@ -84,7 +113,6 @@ app.controller("DetailController", function ($scope, APIService, $http, $rootSco
             });
         }
 
-        // Lưu giỏ hàng vào localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
 
         swal('Thành công!', 'Đã thêm sản phẩm vào giỏ hàng', 'success');

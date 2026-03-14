@@ -48,7 +48,9 @@
                                         Màu sắc: {{ item.variant.color }}
                                     </p>
                                 </td>
-                                <td>{{ item.product.price | currency: "": 0 }}đ</td>
+                                <td>
+                                    {{ (item.product.price - (item.product.price * item.product.sale / 100)) | currency: "" : 0 }}đ
+                                </td>
                                 <td>
                                     <div class="d-flex">
                                         <div class="custom-btn-quantity" ng-click="changeQuantity('decrease', $index)">
@@ -62,7 +64,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    {{ item.product.price * item.quantity | currency: "": 0 }}đ
+                                    {{ ((item.product.price - (item.product.price * item.product.sale / 100)) * item.quantity) | currency: "" : 0 }}đ
                                 </td>
                                 <td class="position-absolute bottom-0 end-0 translate-middle cursor-pointer"
                                     ng-click="removeProduct($index)">

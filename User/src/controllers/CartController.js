@@ -62,7 +62,14 @@ app.controller("CartController", function ($scope, $rootScope, $timeout, $window
         var totalPrice = 0;
 
         $scope.cart.forEach(function (item) {
-            totalPrice += item.product.price * item.quantity;
+
+            let price = item.product.price;
+            let sale = item.product.sale || 0;
+
+            let finalPrice = price - (price * sale / 100);
+
+            totalPrice += finalPrice * item.quantity;
+
         });
 
         return totalPrice;

@@ -56,7 +56,7 @@ app.controller('AppController', function ($rootScope, $window, $timeout, jwtHelp
         $rootScope.isLogin = false;
 
         $timeout(function () {
-            window.location.href = '/';
+            window.location.href = '/User/index.html#!/';
         }, 1000);
     }
 

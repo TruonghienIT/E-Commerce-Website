@@ -239,6 +239,17 @@ app.controller("CheckoutController", function ($scope, $rootScope, $timeout, $ht
     // HOÀN THÀNH ĐƠN HÀNG
     // ===============================
     $scope.completeOrder = function () {
+        if (!$scope.userData.mobile) { 
+            swal("Thông báo", "Vui lòng nhập số điện thoại", "info"); 
+            return; 
+        }
+
+        var phoneRegex = /^(0[3|5|7|8|9])[0-9]{8}$/;
+        
+        if (!phoneRegex.test($scope.userData.mobile)) { 
+            swal("Lỗi", "Số điện thoại không đúng định dạng", "error"); 
+            return; 
+        }
 
         if (!$scope.userData.addressDetail || !$scope.selectedProvince || !$scope.selectedDistrict || !$scope.selectedWard) {
 

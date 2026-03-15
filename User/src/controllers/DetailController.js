@@ -127,6 +127,12 @@ app.controller("DetailController", function ($scope, APIService, $http, $rootSco
             return;
         }
 
+        //kiểm tra nội dung quá >500
+        if ($scope.content.length > 500) {
+            swal('Lỗi', 'Nội dung đánh giá không được vượt quá 500 ký tự', 'error');
+            return;
+        }
+
         var reviewData = {
             pid: $scope.product._id,
             star: $scope.rating,

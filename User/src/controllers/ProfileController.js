@@ -46,6 +46,25 @@ app.controller("ProfileController", function ($scope, $http, $window, APIService
 
 
     $scope.updateUserInfo = function () {
+        // kiểm tra tên người dùng
+        if (!$scope.userData.name) {
+            swal("Thông báo", "Vui lòng nhập tên người dùng", "info");
+            return;
+        }
+
+        if ($scope.userData.name.length < 2 || $scope.userData.name.length > 50) {
+            swal("Lỗi", "Tên người dùng phải từ 2 đến 50 ký tự", "error");
+            return;
+        }
+        
+        //Kiểm tra định dạng số
+        var phoneRegex = /^(0[3|5|7|8|9])[0-9]{8}$/;
+
+        if (!phoneRegex.test($scope.userData.mobile)) { 
+            swal("Lỗi", "Số điện thoại không đúng định dạng", "error"); 
+            return; 
+        }
+
         //lấy tỉnh, huyện, xã, địa chỉ, tạo thành chuỗi
         var address = '';
 

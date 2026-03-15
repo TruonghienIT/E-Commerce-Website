@@ -8,12 +8,16 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
         Authorization: "Bearer " + token
     };
 
-    // format tiền VNĐ
+    // =============================
+    // Format tiền VNĐ
+    // =============================
     function formatMoney(number) {
         return number.toLocaleString('vi-VN') + ' đ';
     }
 
-    // tính giá sau khuyến mại
+    // =============================
+    // Tính giá sau khuyến mại
+    // =============================
     function getFinalPrice(product) {
         let price = product.price;
         let sale = product.sale || 0;
@@ -37,6 +41,7 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
                 return order._id === $routeParams.id;
             });
 
+            // tìm variant
             $scope.order.items.forEach(function (item) {
 
                 item.variant = item.product.variants.find(function (variant) {
@@ -45,20 +50,32 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
 
             });
 
-            // tính tổng tiền
-            $scope.total = $scope.order.items.reduce(function (total, item) {
+            // =============================
+            // Tính tiền
+            // =============================
+
+            let tempTotal = $scope.order.items.reduce(function (total, item) {
 
                 let finalPrice = getFinalPrice(item.product);
 
                 return total + finalPrice * item.quantity;
 
             }, 0);
+
+            // tạm tính
+            $scope.subtotal = tempTotal;
+
+            // giảm giá
+            $scope.discount = $scope.order.discount || 0;
+
+            // tổng tiền
+            $scope.total = tempTotal - $scope.discount;
+
         }
 
     }).catch(function (error) {
         console.error("Lỗi khi lấy dữ liệu:", error);
     });
-
 
     // =============================
     // Cập nhật trạng thái
@@ -82,7 +99,6 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
             });
     };
 
-
     // =============================
     // Xuất Excel
     // =============================
@@ -101,6 +117,8 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
             ['Tên sản phẩm', 'Giá', 'Số lượng', 'Thành tiền', 'Màu sắc', 'Kích cỡ']
         ];
 
+        let totalAmount = 0;
+
         order.items.forEach(function (item) {
 
             var product = item.product;
@@ -114,6 +132,8 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
             let finalPrice = getFinalPrice(product);
             let totalPrice = finalPrice * item.quantity;
 
+            totalAmount += totalPrice;
+
             ws_data.push([
                 product.title,
                 formatMoney(finalPrice),
@@ -125,6 +145,11 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
 
         });
 
+        ws_data.push([]);
+        ws_data.push(['Tạm tính', formatMoney(totalAmount)]);
+        ws_data.push(['Giảm giá', formatMoney(order.discount || 0)]);
+        ws_data.push(['Tổng tiền', formatMoney(totalAmount - (order.discount || 0))]);
+
         var ws = XLSX.utils.aoa_to_sheet(ws_data);
 
         var sheetName = "ĐH_" + order._id.substring(0, 8);
@@ -133,7 +158,6 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
 
         XLSX.writeFile(wb, sheetName + ".xlsx");
     };
-
 
     // =============================
     // Convert ảnh sang base64
@@ -158,7 +182,6 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
         xhr.responseType = 'blob';
         xhr.send();
     }
-
 
     // =============================
     // Xuất PDF
@@ -199,26 +222,11 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
 
                     productInfo: { fontSize: 12, margin: [0, 5, 0, 5] },
 
-                    totalAmount: { fontSize: 16, bold: true, margin: [0, 20, 0, 10] },
-
-                    footer: { fontSize: 10, alignment: 'center', margin: [0, 30, 0, 0] }
-
-                },
-
-                footer: function (currentPage, pageCount) {
-
-                    return {
-
-                        text: 'Trang ' + currentPage + ' / ' + pageCount,
-
-                        style: 'footer'
-
-                    };
+                    totalAmount: { fontSize: 16, bold: true, margin: [0, 20, 0, 10] }
 
                 }
 
             };
-
 
             order.items.forEach(function (item) {
 
@@ -231,7 +239,6 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
                 if (!variant) return;
 
                 let finalPrice = getFinalPrice(product);
-
                 let totalPrice = finalPrice * item.quantity;
 
                 totalAmount += totalPrice;
@@ -256,13 +263,13 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
 
             });
 
-
             docDefinition.content.push(
 
-                { text: 'Tổng tiền: ' + formatMoney(totalAmount), style: 'totalAmount' }
+                { text: 'Tạm tính: ' + formatMoney(totalAmount), style: 'productInfo' },
+                { text: 'Giảm giá: ' + formatMoney(order.discount || 0), style: 'productInfo' },
+                { text: 'Tổng tiền: ' + formatMoney(totalAmount - (order.discount || 0)), style: 'totalAmount' }
 
             );
-
 
             pdfMake.createPdf(docDefinition).download('HD_' + order._id.substring(0, 8) + '.pdf');
 

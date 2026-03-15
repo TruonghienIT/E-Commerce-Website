@@ -1,9 +1,71 @@
 <div class="content">
+
     <div class="shadow-sm px-5 py-3 shadow-lg">
-        <h5 class="mb-0 fw-semibold">Thống Kê Doanh Thu</h4>
+        <h4 class="mb-0 fw-semibold">Thống Kê Kinh Doanh</h4>
     </div>
 
-    <div class="px-5">
+    <div class="px-5 mt-5 pt-3">
+        <div class="row">
 
+            <!-- Biểu đồ -->
+            <div class="col-md-6">
+                <div class="card shadow-sm p-3 h-100">
+                    <h6 class="fw-semibold mb-3 d-flex justify-content-between">
+                        <span>Trạng thái đơn hàng</span>
+                        <span class="badge bg-primary">{{orders.length}}</span>
+                    </h6>
+                    <div style="width:400px; height:400px; margin:auto;">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top sản phẩm -->
+            <div class="col-md-6">
+                <div class="card shadow-sm p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-semibold mb-0">Thống kê sản phẩm</h6>
+                        <select class="form-select w-auto"
+                                ng-model="selectedOption"
+                                ng-change="changeOption()">
+                            <option value="topSell">Top 5 sản phẩm bán chạy</option>
+                            <option value="lowStock">Top 5 sản phẩm tồn kho ít nhất</option>
+                            <option value="topRating">Top 5 sản phẩm đánh giá cao nhất</option>
+                        </select>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Sản phẩm</th>
+                                <th ng-if="selectedOption !== 'topRating'">
+                                    Số lượng ({{columnTitle}})
+                                </th>
+                                <th ng-if="selectedOption === 'topRating'">
+                                    Rating
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="p in displayProducts">
+                                <td>{{$index + 1}}</td>
+                                <td>{{p.title}}</td>
+                                <td>
+                                    <span ng-if="selectedOption === 'topRating'">
+                                        {{p.avg}}⭐ ({{p.count}})
+                                    </span>
+                                    <span ng-if="selectedOption !== 'topRating'">
+                                        {{p.value}}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>

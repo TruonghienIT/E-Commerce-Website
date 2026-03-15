@@ -135,8 +135,12 @@
                         </form>
 
                         <div class="d-flex align-items-center justify-content-between">
-                            <p class="mb-1 fw-medium">Giảm Giá</p>
-                            <p class="mb-1 fw-medium">{{ discount | currency: "": 0 }}đ</p>
+                            <p class="mb-1 fw-medium">
+                                Giảm Giá <span ng-if="discountPercent">({{discountPercent}}%)</span>
+                            </p>
+                            <p class="mb-1 fw-medium">
+                                -{{ discount | currency:"":0 }}đ
+                            </p>
                         </div>
 
                         <div class="d-flex align-items-center justify-content-between">
@@ -181,12 +185,20 @@
                             Màu sắc: {{ item.variant.color }}
                         </p>
                     </td>
-                    <td>{{ item.product.price | currency: "": 0 }}đ</td>
+                    <td>
+                        <span class="text-danger fw-bold">
+                            {{ item.finalPrice | currency:"":0 }}đ
+                        </span>
+                        <br>
+                        <small class="text-decoration-line-through text-muted">
+                            {{ item.product.price | currency:"":0 }}đ
+                        </small>
+                    </td>
                     <td>
                         {{ item.quantity }}
                     </td>
                     <td>
-                        {{ item.product.price * item.quantity | currency: "": 0 }}đ
+                        {{ item.finalPrice * item.quantity | currency: "": 0 }}đ
                     </td>
                 </tr>
             </tbody>

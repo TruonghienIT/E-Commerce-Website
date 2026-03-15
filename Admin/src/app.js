@@ -66,4 +66,7 @@ app.config(function ($routeProvider) {
             templateUrl: './src/pages/feedback/feedback-detail.html',
             controller: 'FeedbackController'
         })
+        .otherwise({
+            redirectTo: "/"
+        });
 })

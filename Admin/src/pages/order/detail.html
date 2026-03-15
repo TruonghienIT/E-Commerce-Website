@@ -315,14 +315,35 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <td colspan="4" class="text-end">Tổng Tiền</td>
-                                                    <td>
-                                                        <p class="fw-bold mb-0">{{ total | currency: "": 0 }}đ</p>
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
+                                                <tfoot>
+
+                                                    <!-- Tạm tính -->
+                                                    <tr>
+                                                        <td colspan="4" class="text-end">Tạm Tính</td>
+                                                        <td>
+                                                            <p class="fw-bold mb-0">{{ subtotal | currency:"":0 }}đ</p>
+                                                        </td>
+                                                    </tr>
+
+                                                    <!-- Giảm giá -->
+                                                    <tr ng-if="order.discount > 0">
+                                                        <td colspan="4" class="text-end text-danger">
+                                                            Giảm Giá
+                                                        </td>
+                                                        <td class="text-danger">
+                                                            <p class="fw-bold mb-0">-{{ order.discount | currency:"":0 }}đ</p>
+                                                        </td>
+                                                    </tr>
+
+                                                    <!-- Tổng tiền -->
+                                                    <tr>
+                                                        <td colspan="4" class="text-end fw-bold">Tổng Tiền</td>
+                                                        <td>
+                                                            <p class="fw-bold mb-0">{{ total | currency:"":0 }}đ</p>
+                                                        </td>
+                                                    </tr>
+
+                                                </tfoot>
                                         </table><!-- end table -->
                                     </div><!-- end table responsive -->
                                     <div class="d-print-none mt-4">

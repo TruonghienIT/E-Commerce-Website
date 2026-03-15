@@ -38,6 +38,7 @@ const getCoupon = asyncHandler(async (req, res) => {
 })
 
 const updateCoupon = asyncHandler(async (req, res) => {
+
     const { cpid } = req.params;
 
     if (Object.keys(req.body).length === 0) {
@@ -45,15 +46,20 @@ const updateCoupon = asyncHandler(async (req, res) => {
     }
 
     if (req.body.expiry) {
-        const { expiry } = req.body;
-        req.body.expiry = Date.now() + +expiry * 24 * 60 * 60 * 1000
+        req.body.expiry = new Date(req.body.expiry);
     }
 
-    const response = await Coupon.findByIdAndUpdate(cpid, req.body, { new: true })
+    const response = await Coupon.findByIdAndUpdate(
+        cpid,
+        req.body,
+        { new: true }
+    );
+
     return res.status(200).json({
         success: response ? true : false,
-        updateCoupon: response ? response : "Đã có lỗi xảy ra, vui lòng thử lại"
-    })
+        updateCoupon: response ? response : "Đã có lỗi xảy ra"
+    });
+
 });
 
 const deleteCoupon = asyncHandler(async (req, res) => {

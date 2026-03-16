@@ -10,7 +10,10 @@ app.controller("UserOrderController", function ($scope, APIService, $window) {
 
     APIService.callAPI('bill/billUser/getall', 'GET', null, headers)
         .then(function (response) {
-            $scope.orders = response.data.data;
+            // Sắp xếp đơn mới nhất trước
+            $scope.orders = response.data.data.sort(function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
 
             // Lặp qua từng đơn hàng
             $scope.orders.forEach(function (order) {

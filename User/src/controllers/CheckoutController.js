@@ -329,7 +329,7 @@ $http.post('http://127.0.0.1:8080/api/bill', order)
                     // NẾU LÀ COD THÌ MỚI CHUYỂN VỀ TRANG CHỦ
                     swal("Thành công", "Đặt hàng thành công", "success");
                     $timeout(function () {
-                        $window.location.href = ''; 
+                        $window.location.href = '/User/index.html#!/profile/order'; 
                     }, 2000);
 
                 } else if ($scope.paymentMethod === "VNPAY") {

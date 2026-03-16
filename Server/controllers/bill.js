@@ -42,6 +42,11 @@ const createNewBill = asyncHandler(async (req, res) => {
 
     <h2>Thông tin đơn hàng</h2>
     <p><strong>Phương thức thanh toán:</strong> ${newBill.paymentMethod}</p>
+    <p><strong>Trạng thái thanh toán:</strong> 
+    ${newBill.paymentStatus === "paid" ? "Đã thanh toán" : 
+    newBill.paymentStatus === "failed" ? "Thanh toán thất bại" : 
+    "Chưa thanh toán"}
+    </p>
     <p><strong>Phương thức vận chuyển:</strong> ${newBill.shippingMethod}</p>
     <p><strong>Ghi chú:</strong> ${newBill.note}</p>
     <p><strong>Trạng thái:</strong> ${newBill.status}</p>
@@ -135,6 +140,23 @@ const updateStatusBill = asyncHandler(async (req, res) => {
             }
 
             await product.save();
+        }
+    }
+    if (bill.paymentMethod === "Thanh Toán Khi Nhận Hàng") {
+
+    if (newStatus === "Đã Giao Hàng") {
+        bill.paymentStatus = "paid";
+    }
+    else if (newStatus === "Đã Hủy") {
+        bill.paymentStatus = "failed";
+    }
+    else {
+        bill.paymentStatus = "unpaid";
+    }
+
+    } else if (bill.paymentMethod === "VNPAY") {
+        if (newStatus === "Đã Hủy") {
+            bill.paymentStatus = "failed";
         }
     }
 

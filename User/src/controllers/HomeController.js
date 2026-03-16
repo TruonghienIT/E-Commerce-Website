@@ -1,7 +1,21 @@
-app.controller("HomeController", function ($scope, $rootScope, $window, DataServices) {
+app.controller("HomeController", function ($scope, $rootScope, $window, DataServices, $location, $timeout) {
     $rootScope.title = 'TechLife | Trang Chủ';
     $scope.loading = true;
     $window.scrollTo(0, 0);
+    var paymentStatus = $location.search().payment;
+
+    if (paymentStatus === 'success') {
+        swal("Thành công", "Thanh toán đơn hàng qua VNPay thành công!", "success");
+        // Xóa param ?payment=success trên URL để F5 không bị hiện lại
+        $timeout(function() {
+            $location.search('payment', null);
+        }, 500);
+    } else if (paymentStatus === 'fail') {
+        swal("Thất bại", "Giao dịch thanh toán đã bị hủy hoặc không thành công.", "error");
+        $timeout(function() {
+            $location.search('payment', null);
+        }, 500);
+    }
 
     // Lấy dữ liệu sản phẩm
     DataServices.getProducts().then(function (products) {

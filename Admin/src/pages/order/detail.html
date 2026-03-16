@@ -239,6 +239,20 @@
                                                 <h5 class="font-size-15 mb-1">Phương Thức Thanh Toán</h5>
                                                 <p>{{ order.paymentMethod }}</p>
                                             </div>
+                                            <div>
+                                                <h5 class="font-size-15 mb-1">Trạng Thái Thanh Toán</h5>
+                                               <p ng-if="order.paymentStatus === 'paid'" style="color:green">
+                                                Đã thanh toán
+                                                </p>
+
+                                                <p ng-if="order.paymentStatus === 'unpaid'" style="color:orange">
+                                                Chưa thanh toán
+                                                </p>
+
+                                                <p ng-if="order.paymentStatus === 'failed'" style="color:red">
+                                                Thanh toán thất bại
+                                                </p>
+                                            </div>
                                             <div class="mt-4">
                                                 <h5 class="font-size-15 mb-1">Phương Thức Vận Chuyển</h5>
                                                 <p>{{ order.shippingMethod }}</p>

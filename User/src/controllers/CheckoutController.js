@@ -310,30 +310,60 @@ app.controller("CheckoutController", function ($scope, $rootScope, $timeout, $ht
             },
         });
 
+        
 
-        $http.post('http://127.0.0.1:8080/api/bill', order)
 
-            .then(function () {
-
-                swal("Thành công", "Đặt hàng thành công", "success");
+$http.post('http://127.0.0.1:8080/api/bill', order)
+            .then(function (billResponse) {
+                var newOrderId = billResponse.data.data ? billResponse.data.data._id : billResponse.data._id;
+                
+                // IN RA CONSOLE ĐỂ KIỂM TRA GIÁ TRỊ THỰC TẾ
+                console.log("Phương thức thanh toán đang chọn là:", $scope.paymentMethod);
 
                 localStorage.removeItem('cart');
                 localStorage.removeItem('discount');
 
-                $timeout(function () {
-                    $window.location.href = '';
-                }, 2000);
+                // BƯỚC 2: RẼ NHÁNH
+                if ($scope.paymentMethod === "Thanh Toán Khi Nhận Hàng") {
+                    
+                    // NẾU LÀ COD THÌ MỚI CHUYỂN VỀ TRANG CHỦ
+                    swal("Thành công", "Đặt hàng thành công", "success");
+                    $timeout(function () {
+                        $window.location.href = ''; 
+                    }, 2000);
 
+                } else if ($scope.paymentMethod === "VNPAY") {
+                    
+                    // NẾU LÀ VNPAY THÌ ĐỔI THÔNG BÁO VÀ GỌI API VNPAY
+                    swal({
+                        title: "Đang tạo link thanh toán VNPay...",
+                        icon: "info",
+                        buttons: false,
+                        closeOnClickOutside: false,
+                        closeOnEsc: false
+                    });
+
+                    $http.post("http://127.0.0.1:8080/api/payment/create-vnpay", {
+                        amount: $scope.totalPrice,
+                        orderId: newOrderId 
+                    })
+                    .then(function (res) {
+                        window.location.href = res.data.paymentUrl;
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                        swal("Lỗi", "Không thể tạo link thanh toán VNPay", "error");
+                    });
+
+                } else {
+                    // Cảnh báo nếu biến $scope.paymentMethod bị sai giá trị
+                    swal("Lỗi", "Phương thức thanh toán không hợp lệ: " + $scope.paymentMethod, "error");
+                }
             })
-
             .catch(function (error) {
-
-                console.error('Lỗi khi gửi yêu cầu API:', error);
-
+                console.error(error);
                 swal("Lỗi", "Đặt hàng thất bại", "error");
-
             });
-
     };
 
 });

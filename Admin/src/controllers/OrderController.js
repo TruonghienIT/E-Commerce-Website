@@ -87,8 +87,9 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
         };
 
         APIService.callAPI('bill/status/' + order._id, 'PUT', status, headers)
-            .then(function () {
-
+            .then(function (res) {
+                order.status = res.data.data.status;
+                order.paymentStatus = res.data.data.paymentStatus;
                 swal('Thành công', 'Cập nhật trạng thái đơn hàng thành công', 'success');
 
             })

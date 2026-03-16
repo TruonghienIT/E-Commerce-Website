@@ -53,6 +53,11 @@ const billSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    paymentStatus: {
+        type: String,
+        enum: ['unpaid', 'paid', 'failed'], // Chỉ nhận 3 giá trị này
+        default: 'unpaid'                   // Mặc định cứ tạo là chưa thanh toán
+    },
     shippingMethod: {
         type: String,
         required: true

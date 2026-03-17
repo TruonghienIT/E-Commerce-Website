@@ -1,5 +1,80 @@
 <div class="container mt-5">
     <h3 class="text-center mb-4">Đơn Hàng Của Bạn</h3>
+
+<div class="row mb-4 text-center align-items-stretch">
+
+    <!-- Tổng đơn -->
+    <div class="col-md-6 d-flex">
+        <div class="card p-3 shadow-sm position-relative w-100 card-equal">
+
+            <!-- icon -->
+            <span class="info-icon" ng-click="toggleDetail()">i</span>
+
+            <!-- ===== VIEW 1: Tổng đơn ===== -->
+            <div ng-if="!showDetail" class="text-center">
+                <h5 class="mt-2">Tổng Đơn Hàng</h5>
+                <h3 class="text-primary">{{ totalOrders }}</h3>
+            </div>
+
+            <!-- ===== VIEW 2: Status ===== -->
+            <div ng-if="showDetail" class="text-center">
+
+                <h5 class="mb-3">Trạng Thái Đơn Hàng</h5>
+
+                <div class="row text-center">
+
+                    <div class="col">
+                        <small>Chờ Xác Nhận</small>
+                        <div class="text-warning fw-bold">
+                            {{ countStatus.choXacNhan }}
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <small>Đã Xác Nhận</small>
+                        <div class="text-primary fw-bold">
+                            {{ countStatus.daXacNhan }}
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <small>Đang Vận Chuyển</small>
+                        <div class="text-info fw-bold">
+                            {{ countStatus.dangVanChuyen }}
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <small>Đã Giao</small>
+                        <div class="text-success fw-bold">
+                            {{ countStatus.daGiaoHang }}
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <small>Đã Hủy</small>
+                        <div class="text-danger fw-bold">
+                            {{ countStatus.daHuy }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Tổng tiền -->
+    <div class="col-md-6 d-flex">
+        <div class="card p-3 shadow-sm w-100 card-equal">
+            <h5 class="mt-2">Tổng Tiền Đã Chi</h5>
+            <h3 class="text-danger">
+                {{ totalSpent | currency:"":0 }}đ
+            </h3>
+        </div>
+    </div>
+
+</div>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -74,7 +149,7 @@
                                 </p>
                             </td>
                             <td>{{ item.quantity }}</td>
-                            <td>{{ item.product.price * item.quantity | currency: "": 0 }}đ</td>
+                            <td>{{ item.finalPrice * item.quantity | currency: "": 0 }}đ</td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -87,7 +162,7 @@
                             <td>{{ selectedOrder.totalPrice | currency: "": 0 }}đ</td>
                         </tr>
                     </tfoot>
-                </table>
+                </table>    
             </div>
         </div>
     </div>

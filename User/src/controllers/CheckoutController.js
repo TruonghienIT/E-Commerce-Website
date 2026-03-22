@@ -345,7 +345,8 @@ $http.post('http://127.0.0.1:8080/api/bill', order)
 
                     $http.post("http://127.0.0.1:8080/api/payment/create-vnpay", {
                         amount: $scope.totalPrice,
-                        orderId: newOrderId 
+                        orderId: newOrderId,
+                        returnUrl: "http://localhost:5500/User/index.html#!/profile/order" 
                     })
                     .then(function (res) {
                         window.location.href = res.data.paymentUrl;

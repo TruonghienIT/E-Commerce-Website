@@ -12,6 +12,12 @@ app.controller("ProductController", function ($rootScope, $timeout, $scope, $loc
     $scope.itemsPerPage = 6;
     $scope.pages = [];
 
+    $scope.searchProduct = "";
+    $scope.sortOrder = "";
+
+    $scope.orders = [];
+    $scope.soldMap = {};
+
     DataServices.getAllCategory().then(function (response) {
         $scope.categories = response;
     });
@@ -30,17 +36,101 @@ app.controller("ProductController", function ($rootScope, $timeout, $scope, $loc
         updateDisplayedProduct();
     });
 
+    DataServices.getAllOrder().then(function (orders) {
+
+        $scope.orders = orders || [];
+
+        let soldMap = {};
+
+        ($scope.orders || []).forEach(function (order) {
+
+            if (order.status !== "Đã Giao Hàng") return;
+
+            (order.items || []).forEach(function (item) {
+
+                let productId = item.product?._id || item.product;
+
+                if (!soldMap[productId]) {
+                    soldMap[productId] = 0;
+                }
+
+                soldMap[productId] += item.quantity;
+            });
+
+        });
+
+        $scope.soldMap = soldMap;
+
+        // 👉 gán vào product nếu đã load rồi
+        attachSoldToProducts();
+    });
+
+    $scope.$watch("searchProduct", function () {
+        $scope.currentPage = 1;
+        updateDisplayedProduct();
+    });
+    $scope.$watch("sortOrder", function () {
+        $scope.currentPage = 1;
+        updateDisplayedProduct();
+    });
+
     function updateDisplayedProduct() {
+
+        var filteredProducts = $scope.products;
+
+        // 🔍 SEARCH
+        if ($scope.searchProduct && $scope.searchProduct.trim() !== "") {
+            var keyword = $scope.searchProduct.toLowerCase();
+
+            filteredProducts = $scope.products.filter(function (product) {
+                return (
+                    (product.title && product.title.toLowerCase().includes(keyword)) ||
+                    (product.category?.title && product.category.title.toLowerCase().includes(keyword))
+                );
+            });
+        }
+
+        // 🔥 SORT THEO LƯỢT BÁN
+        if ($scope.sortOrder === "asc") {
+            filteredProducts.sort(function (a, b) {
+                return (a.sold || 0) - (b.sold || 0);
+            });
+        } else if ($scope.sortOrder === "desc") {
+            filteredProducts.sort(function (a, b) {
+                return (b.sold || 0) - (a.sold || 0);
+            });
+        }
+        else {
+            filteredProducts.sort(function (a, b) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+        }
+
+        // 📄 PAGINATION (PHẢI dùng filteredProducts)
         var startIndex = ($scope.currentPage - 1) * $scope.itemsPerPage;
         var endIndex = startIndex + $scope.itemsPerPage;
-        $scope.displayedProducts = $scope.products.slice(startIndex, endIndex);
 
-        // Tính toán số trang
+        // hiển thị danh sách đã filter + sort
+        $scope.displayedProducts = filteredProducts.slice(startIndex, endIndex);
+
+        // 🔢 PAGE COUNT (cũng phải dùng filteredProducts)
         $scope.pages = [];
-        var totalPages = Math.ceil($scope.products.length / $scope.itemsPerPage);
+        var totalPages = Math.ceil(filteredProducts.length / $scope.itemsPerPage);
+
         for (var i = 1; i <= totalPages; i++) {
             $scope.pages.push(i);
         }
+    }
+
+    function attachSoldToProducts() {
+
+        if (!$scope.products || !$scope.products.length) return;
+
+        $scope.products.forEach(function (product) {
+            product.sold = $scope.soldMap[product._id] || 0;
+        });
+
+        updateDisplayedProduct();
     }
 
     $scope.setCurrentPage = function (page) {

@@ -5,11 +5,20 @@
 
     <div class="px-5">
 
-        <!--form thêm danh mục-->
-        <button class="btn btn-danger mt-5" ng-click="toggleAddCategoryForm()">
-            Thêm Danh Mục Mới
-            <i class="fas fa-plus"></i>
-        </button>
+       <div class="d-flex justify-content-between align-items-center mt-5">
+
+            <button class="btn btn-danger" ng-click="toggleAddCategoryForm()">
+                Thêm Danh Mục Mới <i class="fas fa-plus"></i>
+            </button>
+
+            <div class="d-flex align-items-center" style="width: 300px;">
+                <input type="text"
+                    class="form-control me-2"
+                    placeholder="Tìm kiếm danh mục..."
+                    ng-model="searchCategory">
+            </div>
+
+        </div>
 
         <form class="mt-5" ng-show="showAddCategoryForm" ng-submit="addCategory()">
             <div class="mb-3 w-25">

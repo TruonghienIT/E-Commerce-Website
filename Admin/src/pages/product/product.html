@@ -8,6 +8,17 @@
             <a href="#!product/add" class="btn btn-danger">Thêm Sản Phẩm Mới
                 <i class="fas fa-plus"></i>
             </a>
+            <div class="d-flex align-items-center" style="width: 300px;">
+                <input type="text"
+                    class="form-control me-2"
+                    placeholder="Tìm kiếm sản phẩm..."
+                    ng-model="searchProduct">
+            </div>
+            <select class="form-select" ng-model="sortOrder" style="width: 180px;">
+                <option value="">Sắp xếp</option>
+                <option value="asc">Ít lượt bán</option>
+                <option value="desc">Nhiều lượt bán</option>
+            </select>
         </div>
 
         <table class="table table-striped my-5">

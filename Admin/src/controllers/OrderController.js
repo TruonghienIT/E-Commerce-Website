@@ -8,6 +8,13 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
         Authorization: "Bearer " + token
     };
 
+    $scope.searchOrder = "";
+    $scope.displayedOrders = [];
+
+    $scope.$watch("searchOrder", function () {
+        updateDisplayedOrders();
+    });
+
     // =============================
     // Format tiền VNĐ
     // =============================
@@ -24,6 +31,27 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
         return price - (price * sale / 100);
     }
 
+    function updateDisplayedOrders() {
+
+        var filtered = $scope.orders;
+
+        if ($scope.searchOrder && $scope.searchOrder.trim() !== "") {
+
+            var keyword = $scope.searchOrder.toLowerCase();
+
+            filtered = $scope.orders.filter(function (order) {
+                return (
+                    (order._id && order._id.toLowerCase().includes(keyword)) ||
+                    (order.name && order.name.toLowerCase().includes(keyword)) ||
+                    (order.status && order.status.toLowerCase().includes(keyword)) ||
+                    (order.paymentMethod && order.paymentMethod.toLowerCase().includes(keyword))
+                );
+            });
+        }
+
+        $scope.displayedOrders = filtered;
+    }
+
     // =============================
     // Load dữ liệu đơn hàng
     // =============================
@@ -34,6 +62,8 @@ app.controller("OrderController", function ($scope, $rootScope, $routeParams, Da
         $scope.orders.sort(function (a, b) {
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
+
+        updateDisplayedOrders();
 
         if ($routeParams.id) {
 

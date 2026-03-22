@@ -11,9 +11,13 @@ app.controller('CategoryController', function ($scope, $rootScope, DataServices,
 
     $scope.listCategory = [];
 
+    $scope.searchCategory = "";
+    $scope.originalList = [];
+
     DataServices.getAllCategory()
         .then(function (listCategory) {
             $scope.listCategory = listCategory;
+            $scope.originalList = angular.copy(listCategory);
 
             $scope.listCategory.sort(function (a, b) {
                 return new Date(b.createdAt) - new Date(a.createdAt);
@@ -26,6 +30,29 @@ app.controller('CategoryController', function ($scope, $rootScope, DataServices,
     $scope.toggleAddCategoryForm = function () {
         $scope.showAddCategoryForm = !$scope.showAddCategoryForm;
     };
+
+    $scope.searchCategoryFunc = function () {
+
+        // Nếu input rỗng → reset lại
+        if (!$scope.searchCategory || $scope.searchCategory.trim() === "") {
+            $scope.listCategory = angular.copy($scope.originalList);
+        } else {
+            let keyword = $scope.searchCategory.toLowerCase();
+
+            $scope.listCategory = $scope.originalList.filter(function (item) {
+                return item.title && item.title.toLowerCase().includes(keyword);
+            });
+        }
+
+        // sort lại sau khi search
+        $scope.listCategory.sort(function (a, b) {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+    };
+
+    $scope.$watch("searchCategory", function () {
+        $scope.searchCategoryFunc();
+    });
 
     $scope.addCategory = function () {
         var data = {

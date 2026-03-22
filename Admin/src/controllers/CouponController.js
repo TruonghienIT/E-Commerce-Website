@@ -6,9 +6,36 @@ app.controller("CouponController", function ($rootScope, $location, $timeout, $s
         'Authorization': 'Bearer ' + token,
     };
 
+    $scope.searchCoupon = "";
+    $scope.displayedCoupons = [];
+
     DataServices.getAllCoupon().then(function (response) {
         $scope.listCoupon = response;
+        updateDisplayedCoupons();
     });
+
+    $scope.$watch("searchCoupon", function () {
+        updateDisplayedCoupons();
+    });
+
+    function updateDisplayedCoupons() {
+
+        var filtered = $scope.listCoupon;
+
+        if ($scope.searchCoupon && $scope.searchCoupon.trim() !== "") {
+
+            var keyword = $scope.searchCoupon.toLowerCase();
+
+            filtered = $scope.listCoupon.filter(function (c) {
+                return (
+                    (c.name && c.name.toLowerCase().includes(keyword)) ||
+                    (c.discount && c.discount.toString().includes(keyword))
+                );
+            });
+        }
+
+        $scope.displayedCoupons = filtered;
+    }
 
     $scope.addCoupon = function () {
         swal({
@@ -35,6 +62,7 @@ app.controller("CouponController", function ($rootScope, $location, $timeout, $s
 
             DataServices.getAllCoupon().then(function (response) {
                 $scope.listCoupon = response;
+                updateDisplayedCoupons();
             });
         });
     }
@@ -52,6 +80,7 @@ app.controller("CouponController", function ($rootScope, $location, $timeout, $s
                         swal('Thành công', 'Xóa mã giảm giá thành công', 'success');
                         DataServices.getAllCoupon().then(function (response) {
                             $scope.listCoupon = response;
+                            updateDisplayedCoupons();
                         });
                     });
                 }

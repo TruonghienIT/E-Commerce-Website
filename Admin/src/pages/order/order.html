@@ -2,8 +2,16 @@
     <div class="shadow-sm px-5 py-3 shadow-lg">
         <h5 class="mb-0 fw-semibold">Quản Lý Đơn Hàng</h4>
     </div>
-
     <div class="px-5">
+        <div class="d-flex justify-content-between align-items-center mt-5">
+            <div class="d-flex align-items-center gap-3">
+                <input type="text"
+                    class="form-control"
+                    style="width: 300px;"
+                    placeholder="Tìm đơn hàng..."
+                    ng-model="searchOrder">
+            </div>
+        </div>
         <table class="table table-striped my-5">
             <thead>
                 <tr class="text-center">
@@ -16,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="order in orders" class="text-center">
+                <tr ng-repeat="order in displayedOrders" class="text-center">
                     <td>{{ order._id }}</td>
                     <td>{{ order.name }}</td>
                     <td>{{ order.createdAt | date: "HH:mm:ss dd-MM-yyyy" }}</td>

@@ -1,10 +1,11 @@
-app.controller("DetailController", function ($scope, APIService, $http, $rootScope, $routeParams, DataServices, APIService) {
+app.controller("DetailController", function ($scope, APIService, $http, $rootScope, $routeParams, DataServices) {
 
     $scope.token = localStorage.getItem('token');
     $scope.headers = {
         'Authorization': 'Bearer ' + $scope.token
     };
 
+    $scope.hasPurchased = false;
     window.scrollTo(0, 0);
     $scope.productId = $routeParams.id;
 
@@ -30,6 +31,20 @@ app.controller("DetailController", function ($scope, APIService, $http, $rootSco
             }
 
             $scope.selectedVariant = product.variants[0];
+
+            // ===============================
+            // ✅ CHECK ĐÃ MUA
+            // ===============================
+            if ($scope.token) {
+                APIService.callAPI('bill/checkPurchased/' + $scope.productId, 'GET', null, $scope.headers)
+                    .then(function (res) {
+                        $scope.hasPurchased = res.data.purchased;
+                        console.log("Đã mua:", $scope.hasPurchased);
+                    })
+                    .catch(function (err) {
+                        console.error("Lỗi checkPurchased:", err);
+                    });
+            }
 
             $scope.getProductQuantity = function (selectedVariantId) {
                 var selectedVariant = $scope.product.variants.find(function (variant) {
@@ -122,6 +137,12 @@ app.controller("DetailController", function ($scope, APIService, $http, $rootSco
     $scope.content = '';
 
     $scope.addReview = function () {
+
+        if (!$scope.hasPurchased) {
+            swal("Thông báo", "Bạn cần mua sản phẩm trước khi đánh giá", "warning");
+            return;
+        }
+
         if (!$scope.rating || !$scope.content) {
             swal('Lỗi', 'Vui lòng nhập đầy đủ thông tin', 'error');
             return;

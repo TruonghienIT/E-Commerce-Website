@@ -189,11 +189,39 @@ const updateBill = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, data: bill });
 });
 
+// =========================
+// ✅ CHECK ĐÃ MUA SẢN PHẨM
+// =========================
+const checkPurchased = asyncHandler(async (req, res) => {
+
+    const userId = req.user._id;
+    const productId = req.params.productId;
+
+    // tìm các đơn đã giao
+    const orders = await Bill.find({
+        user: userId,
+        status: "Đã Giao Hàng"
+    });
+
+    // kiểm tra trong items
+    const hasPurchased = orders.some(order =>
+        order.items.some(item =>
+            item.product.toString() === productId
+        )
+    );
+
+    res.status(200).json({
+        success: true,
+        purchased: hasPurchased
+    });
+});
+
 module.exports = {
     createNewBill,
     getAllBill,
     getBill,
     updateBill,
     getBillByUser,
-    updateStatusBill
+    updateStatusBill, 
+    checkPurchased
 }

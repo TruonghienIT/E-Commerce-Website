@@ -94,6 +94,18 @@
                         data-bs-target="#orderDetailModal" ng-click="showOrderDetail(order)">
                         Chi Tiết
                     </button>
+                    <button type="button"
+                            class="btn btn-warning ms-2"
+                            ng-if="order.status === 'Chờ Xác Nhận'"
+                            ng-click="cancelOrder(order)">
+                        Hủy đơn
+                    </button>
+                    <button type="button"
+                            class="btn btn-secondary ms-2"
+                            ng-if="order.status !== 'Chờ Xác Nhận'"
+                            disabled>
+                        Không thể hủy
+                    </button>
                 </td>
             </tr>
         </tbody>

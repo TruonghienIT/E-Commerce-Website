@@ -148,5 +148,42 @@ app.controller("UserOrderController", function ($scope, APIService, $window) {
     $scope.showOrderDetail = function (order) {
         $scope.selectedOrder = order;
     };
+    
+    $scope.cancelOrder = function (order) {
 
+    swal({
+        title: "Bạn chắc chắn?",
+        text: "Đơn hàng sẽ bị hủy!",
+        icon: "warning",
+        buttons: ["Quay lại", "Hủy đơn"],
+        dangerMode: true,
+    }).then((willCancel) => {
+
+        if (willCancel) {
+
+            APIService.callAPI('bill/status/' + order._id, 'PUT', {
+                status: "Đã Hủy"
+            }, headers)
+                .then(function () {
+
+                    swal("Thành công!", "Đơn hàng đã được hủy", "success");
+
+                    // ✅ Update UI
+                    if (order.status === "Chờ Xác Nhận") {
+                        $scope.countStatus.choXacNhan--;
+                    }
+
+                    order.status = "Đã Hủy";
+                    $scope.countStatus.daHuy++;
+
+                })
+                .catch(function (err) {
+                    console.error(err);
+
+                    swal("Thất bại!", "Không thể hủy đơn!", "error");
+                });
+
+        }
+    });
+};
 });

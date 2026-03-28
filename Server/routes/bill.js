@@ -10,5 +10,6 @@ router.get("/:id", billController.getBill);
 
 //lấy tât cả đơn hàng của user
 router.get("/billUser/getall", verifyAccessToken, billController.getBillByUser);
+router.get("/checkPurchased/:productId", verifyAccessToken, billController.checkPurchased);
 
 module.exports = router
